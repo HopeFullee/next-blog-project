@@ -7,13 +7,17 @@ const write = async (req, res) => {
     const db = (await connectDB).db("forum");
     const { title, content } = req.body;
 
-    const post = await db.collection("post").insertOne({
-      title,
-      content,
-    });
-  }
+    if (title.trim() === "" || content.trim() === "") {
+      return res.status(500).json("비어있는 항목이 존제합니다.");
+    } else {
+      const post = await db.collection("post").insertOne({
+        title,
+        content,
+      });
 
-  return res.status(200).json("등록완료");
+      return res.status(200).redirect("/list");
+    }
+  }
 };
 
 export default write;

@@ -2,26 +2,24 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import CustomInput from "@/components/shared/CustomInput";
+
+type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
 const WritePage = () => {
-  const [forumValue, setForumValue] = useState({
+  const [forumData, setForumData] = useState({
     title: "",
     content: "",
   });
+
   const [alertState, setAlertState] = useState();
 
-  const handleInputChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<InputElements>) => {
     const { name, value } = e.target;
-    setForumValue((prev) => ({ ...prev, [name]: value }));
+    setForumData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const forumSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {
-    // inputValue.forEach((val) => {
-    //   if (val.trim() === "") {
-    //     e.preventDefault();
-    //   }
-    // });
-  };
+  const forumSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {};
 
   return (
     <div>
@@ -34,21 +32,18 @@ const WritePage = () => {
           className="w-full gap-40 mt-40 flex-col-center"
         >
           <ul className="flex justify-between w-full">
-            <label htmlFor="forum_title" className="font-semibold">
+            <label htmlFor="forum_title" className="font-semibold w-50">
               제목
             </label>
-            <div className="relative w-[90%]">
-              <input
-                type="text"
-                id="forum_title"
-                name="title"
-                onChange={(e) => handleInputChange(e)}
-                value={forumValue.title}
-                className="w-full p-5 outline-none "
-              />
-
-              <p className="absolute bottom-[-30px]">asd</p>
-            </div>
+            <CustomInput
+              id="forum_title"
+              name="title"
+              type="text"
+              placeholder="글 제목"
+              value={forumData.title}
+              onChange={(e) => handleChange(e)}
+              alert={"제목을 입력해주세요"}
+            />
           </ul>
           <div className="flex justify-between w-full">
             <label htmlFor="forum_content" className="font-semibold">
@@ -57,8 +52,8 @@ const WritePage = () => {
             <textarea
               id="forum_content"
               name="content"
-              onChange={(e) => handleInputChange(e)}
-              value={forumValue.content}
+              onChange={(e) => handleChange(e)}
+              value={forumData.content}
               className="w-[90%] outline-none resize-none p-5 min-h-150"
             />
           </div>

@@ -11,8 +11,10 @@ const ListPage = async () => {
         <button type="submit">모든 DB POST 내용 조회</button>
       </form>
       <ul className="under:w-full flex-col-center gap-30 under:rounded-md mt-100">
-        {result.map((db, idx) => {
-          return <ListCard key={idx} {...db} />;
+        {result.map(({ _id, title, content }, idx) => {
+          return (
+            <ListCard key={idx} _id={_id} title={title} content={content} />
+          );
         })}
       </ul>
     </div>
