@@ -7,10 +7,16 @@ import CustomTextArea from "@/components/shared/CustomTextArea";
 
 type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
-const WritePage = () => {
+type Props = {
+  postId: string | undefined;
+  postTitle: string;
+  postContent: string;
+};
+
+const EditForm = ({ postId, postTitle, postContent }: Props) => {
   const [forumData, setForumData] = useState({
-    title: "",
-    content: "",
+    title: postTitle,
+    content: postContent,
   });
 
   const [regexState, setRegexState] = useState({
@@ -46,13 +52,20 @@ const WritePage = () => {
   return (
     <div>
       <div className="mx-auto flex-col-center mt-100 max-w-400">
-        <h4 className="font-semibold text-18">게시글 작성</h4>
+        <h4 className="font-semibold text-18">게시글 수정</h4>
         <form
           onSubmit={(e) => formSubmitHanlder(e)}
-          action="/api/write"
+          action="/api/edit"
           method="POST"
           className="w-full gap-40 mt-40 flex-col-center"
         >
+          <input type="hidden" name="_method" value="PATCH" />
+          <input
+            className="hidden"
+            type="hidden"
+            name="_id"
+            defaultValue={postId}
+          />
           <div className="flex justify-between w-full">
             <label htmlFor="forum_title" className="font-semibold w-50">
               제목
@@ -95,7 +108,7 @@ const WritePage = () => {
               type="submit"
               className="px-20 py-3 font-semibold border-black border-1 text-14"
             >
-              등록
+              수정
             </button>
           </div>
         </form>
@@ -104,4 +117,4 @@ const WritePage = () => {
   );
 };
 
-export default WritePage;
+export default EditForm;

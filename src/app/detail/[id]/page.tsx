@@ -9,7 +9,7 @@ const DetailPage = async (props: {
   };
 }) => {
   const db = (await connectDB).db("forum");
-  let result = await db
+  const result = await db
     .collection("post")
     .findOne({ _id: new ObjectId(props.params.id) });
 

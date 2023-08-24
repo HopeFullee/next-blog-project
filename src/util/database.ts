@@ -4,7 +4,6 @@ const url: string =
   "mongodb+srv://admin:qwer1234@cluster0.jowkjuj.mongodb.net/?retryWrites=true&w=majority";
 const options = { useNewUrlParser: true } as MongoClientOptions;
 let connectDB: Promise<MongoClient>;
-let uri: string = "";
 
 if (process.env.NODE_ENV === "development") {
   if (!global._mongo) {
