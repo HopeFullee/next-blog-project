@@ -1,11 +1,11 @@
 import { connectDB } from "@/util/database";
-import { ObjectIdLike } from "bson";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
+import DeleteButton from "@/components/detail/DeleteButton";
 
 const DetailPage = async (props: {
   params: {
-    id: string | number | ObjectId | ObjectIdLike | Uint8Array | undefined;
+    id: string;
   };
 }) => {
   const db = (await connectDB).db("forum");
@@ -19,7 +19,7 @@ const DetailPage = async (props: {
         <p className="font-semibold text-center text-18">상세 페이지</p>
         <li className="flex justify-end gap-10 font-semibold text-14 under:border-1 under:border-black under:px-10 under:py-2 under:rounded-sm">
           <Link href={`/edit/${result?._id}`}>수정</Link>
-          <Link href={"/"}>삭제</Link>
+          <DeleteButton id={result?._id.toString()} />
         </li>
         <li className="p-5 border-gray-400 border-b-1">
           <h4 className="break-words">{result?.title}</h4>

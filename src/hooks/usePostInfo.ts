@@ -7,7 +7,7 @@ const usePostInfo = async (id: ObjectId) => {
     .collection("post")
     .findOne({ _id: new ObjectId(id) });
 
-  return { postInfo };
+  return postInfo;
 };
 
 export default usePostInfo;
