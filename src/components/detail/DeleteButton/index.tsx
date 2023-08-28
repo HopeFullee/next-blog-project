@@ -1,6 +1,5 @@
 "use client";
 
-import { url } from "inspector";
 import { useState } from "react";
 import CustomModal from "@/components/shared/CustomModal";
 
@@ -17,9 +16,15 @@ const DeleteButton = ({ id, ...rest }: Props) => {
       body: JSON.stringify({
         _id: id,
       }),
-    }).then(() => {
-      window.location.href = "/list";
-    });
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          window.location.replace("/list");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

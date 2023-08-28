@@ -1,6 +1,8 @@
 import { connectDB } from "@/util/database";
 import ListCard from "@/components/list/ListCard";
 
+export const dynamic = "force-dynamic";
+
 const ListPage = async () => {
   const db = (await connectDB).db("forum");
   let result = await db.collection("post").find().toArray();

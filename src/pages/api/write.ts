@@ -1,7 +1,9 @@
 import { connectDB } from "@/util/database";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const write = async (req, res) => {
+const write = async (req: NextApiRequest, res: NextApiResponse) => {
   const { title, content } = req.body;
+
   if (req.method === "POST") {
     const db = (await connectDB).db("forum");
     if (title.trim() === "" || content.trim() === "") {

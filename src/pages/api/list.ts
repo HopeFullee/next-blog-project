@@ -1,6 +1,7 @@
 import { connectDB } from "@/util/database";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const listHandler = async (req, res) => {
+const listHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     const db = (await connectDB).db("forum");
     let result = await db.collection("post").find().toArray();

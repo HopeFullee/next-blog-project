@@ -1,7 +1,8 @@
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const edit = async (req, res) => {
+const edit = async (req: NextApiRequest, res: NextApiResponse) => {
   const { _id, title, content, _method } = req.body;
   if (_method === "PATCH") {
     if (title.trim() === "" || content.trim() === "") {
