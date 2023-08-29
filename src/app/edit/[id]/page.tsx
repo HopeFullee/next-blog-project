@@ -1,26 +1,23 @@
 import EditForm from "@/components/edit/EditForm";
-import { connectDB } from "@/util/database";
-import { ObjectIdLike } from "bson";
-import { ObjectId } from "mongodb";
-
-type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
 const EditPage = async (props: {
   params: {
-    id: string | number | ObjectId | ObjectIdLike | Uint8Array | undefined;
+    id: string;
   };
 }) => {
-  const db = (await connectDB).db("forum");
-  const result = await db
-    .collection("post")
-    .findOne({ _id: new ObjectId(props.params.id) });
+  const queryString = new URLSearchParams({ id: props.params.id }).toString();
+
+  const response = await fetch(
+    "http://localhost:3000/api/detail?" + queryString
+  );
+  const postDetail = await response.json();
 
   return (
     <>
       <EditForm
-        postId={result?._id.toString()}
-        postTitle={result?.title}
-        postContent={result?.content}
+        postId={postDetail?._id.toString()}
+        postTitle={postDetail?.title}
+        postContent={postDetail?.content}
       />
     </>
   );

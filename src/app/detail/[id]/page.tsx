@@ -1,5 +1,3 @@
-import { connectDB } from "@/util/database";
-import { ObjectId } from "mongodb";
 import Link from "next/link";
 import DeleteButton from "@/components/detail/DeleteButton";
 
@@ -8,24 +6,27 @@ const DetailPage = async (props: {
     id: string;
   };
 }) => {
-  const db = (await connectDB).db("forum");
-  const result = await db
-    .collection("post")
-    .findOne({ _id: new ObjectId(props.params.id) });
+  const queryString = new URLSearchParams({ id: props.params.id }).toString();
+
+  const response = await fetch(
+    "http://localhost:3000/api/detail?" + queryString
+  );
+
+  const postDetail = await response.json();
 
   return (
     <section className="flex-center">
       <ul className="flex flex-col w-full gap-20 max-w-400 mt-100">
         <p className="font-semibold text-center text-18">상세 페이지</p>
         <li className="flex justify-end gap-10 font-semibold text-14 under:border-1 under:border-black under:px-10 under:py-2 under:rounded-sm">
-          <Link href={`/edit/${result?._id}`}>수정</Link>
-          <DeleteButton id={result?._id.toString()} />
+          <Link href={`/edit/${postDetail?._id}`}>수정</Link>
+          <DeleteButton id={postDetail?._id?.toString()} />
         </li>
         <li className="p-5 border-gray-400 border-b-1">
-          <h4 className="break-words">{result?.title}</h4>
+          <h4 className="break-words">{postDetail?.title}</h4>
         </li>
         <li className="p-5 border-gray-400 border-b-1">
-          <p>{result?.content}</p>
+          <p>{postDetail?.content}</p>
         </li>
       </ul>
     </section>

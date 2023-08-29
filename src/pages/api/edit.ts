@@ -10,7 +10,7 @@ const edit = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const db = (await connectDB).db("forum");
-    const patch = await db.collection("post").updateOne(
+    const result = await db.collection("post").updateOne(
       { _id: new ObjectId(_id) },
       {
         $set: {

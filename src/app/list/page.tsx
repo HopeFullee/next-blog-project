@@ -1,11 +1,11 @@
-import { connectDB } from "@/util/database";
+import { PostType } from "@/types/post";
 import ListCard from "@/components/list/ListCard";
 
 export const dynamic = "force-dynamic";
 
 const ListPage = async () => {
-  const db = (await connectDB).db("forum");
-  let result = await db.collection("post").find().toArray();
+  const response = await fetch("http://localhost:3000/api/list");
+  const postData: PostType[] = await response.json();
 
   return (
     <div className="mx-auto max-w-1200">
@@ -13,7 +13,7 @@ const ListPage = async () => {
         <button type="submit">모든 DB POST 내용 조회</button>
       </form>
       <ul className="under:w-full flex-col-center gap-30 under:rounded-md mt-100">
-        {result.map(({ _id, title, content }, idx) => {
+        {postData.map(({ _id, title, content }, idx) => {
           return (
             <ListCard key={idx} _id={_id} title={title} content={content} />
           );
