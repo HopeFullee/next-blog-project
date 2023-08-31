@@ -20,7 +20,7 @@ const edit = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     );
 
-    return res.redirect(302, "/list");
+    return res.redirect(302, `/detail/${_id}`);
   }
   return res.status(500).json("somthing went wrong");
 };

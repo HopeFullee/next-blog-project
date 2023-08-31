@@ -7,16 +7,10 @@ import CustomTextArea from "@/components/shared/CustomTextArea";
 
 type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
-type Props = {
-  postId: string | undefined;
-  postTitle: string;
-  postContent: string;
-};
-
-const EditForm = ({ postId, postTitle, postContent }: Props) => {
+const PostForm = () => {
   const [forumData, setForumData] = useState({
-    title: postTitle,
-    content: postContent,
+    title: "",
+    content: "",
   });
 
   const [regexState, setRegexState] = useState({
@@ -44,7 +38,6 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
         e.preventDefault();
         setRegexState((prev) => ({ ...prev, [key]: true }));
       } else {
-        window.location.replace("/list");
         setRegexState((prev) => ({ ...prev, [key]: false }));
       }
     });
@@ -53,20 +46,13 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
   return (
     <div>
       <div className="mx-auto flex-col-center mt-100 max-w-400">
-        <h4 className="font-semibold text-18">게시글 수정</h4>
+        <h4 className="font-semibold text-18">게시글 작성</h4>
         <form
           onSubmit={(e) => formSubmitHanlder(e)}
-          action="/api/edit"
+          action="/api/write"
           method="POST"
           className="w-full gap-40 mt-40 flex-col-center"
         >
-          <input type="hidden" name="_method" value="PATCH" />
-          <input
-            className="hidden"
-            type="hidden"
-            name="_id"
-            defaultValue={postId}
-          />
           <div className="flex justify-between w-full">
             <label htmlFor="forum_title" className="font-semibold w-50">
               제목
@@ -97,7 +83,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
             />
           </div>
           <div className="flex justify-end w-full gap-20">
-            <Link href={`/detail/${postId}`}>
+            <Link href={"/list"}>
               <button
                 type="button"
                 className="px-20 py-3 font-semibold border-black border-1 text-14"
@@ -109,7 +95,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
               type="submit"
               className="px-20 py-3 font-semibold border-black border-1 text-14"
             >
-              수정
+              등록
             </button>
           </div>
         </form>
@@ -118,4 +104,4 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
   );
 };
 
-export default EditForm;
+export default PostForm;

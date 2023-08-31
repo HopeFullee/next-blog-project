@@ -4,10 +4,11 @@ import { useState } from "react";
 import CustomModal from "@/components/shared/CustomModal";
 
 interface Props {
-  id?: string;
+  id: string;
+  author: string;
 }
 
-const DeleteButton = ({ id, ...rest }: Props) => {
+const DeleteButton = ({ id, author, ...rest }: Props) => {
   const [modalState, setModalState] = useState(false);
 
   const handleDeleteClick = (id: string | undefined) => {
@@ -15,6 +16,7 @@ const DeleteButton = ({ id, ...rest }: Props) => {
       method: "DELETE",
       body: JSON.stringify({
         _id: id,
+        author: author,
       }),
     })
       .then((res) => {
