@@ -5,14 +5,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 
 const postDeleteHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session) return res.status(403).json("접근 권한이 없습니다.");
-
   if (req.method === "DELETE") {
-    const { _id, author } = JSON.parse(req.body);
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) return res.status(403).json("접근 권한이 없습니다.");
 
-    if (session.user?.email === author) {
+    const { _id } = JSON.parse(req.body);
+
+    const db = (await connectDB).db("forum");
+    const result = await db
+      .collection("post")
+      .findOne({ _id: new ObjectId(_id) });
+
+    if (session.user?.email === result?.author) {
       const db = (await connectDB).db("forum");
       const result = await db
         .collection("post")

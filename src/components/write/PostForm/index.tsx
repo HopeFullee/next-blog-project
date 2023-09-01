@@ -8,7 +8,7 @@ import CustomTextArea from "@/components/shared/CustomTextArea";
 type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
 const PostForm = () => {
-  const [forumData, setForumData] = useState({
+  const [postData, setPostData] = useState({
     title: "",
     content: "",
   });
@@ -21,7 +21,7 @@ const PostForm = () => {
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
     // controlled input
     const { name, value } = e.target;
-    setForumData((prev) => ({ ...prev, [name]: value }));
+    setPostData((prev) => ({ ...prev, [name]: value }));
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
@@ -33,7 +33,7 @@ const PostForm = () => {
 
   const formSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {
     // if input field is null -> trigger regexState to show warning
-    Object.entries(forumData).forEach(([key, value]) => {
+    Object.entries(postData).forEach(([key, value]) => {
       if (value.trim() === "") {
         e.preventDefault();
         setRegexState((prev) => ({ ...prev, [key]: true }));
@@ -63,7 +63,7 @@ const PostForm = () => {
               type="text"
               placeholder="글 제목"
               onChange={(e) => handleChange(e)}
-              value={forumData.title}
+              value={postData.title}
               regexMessage={"제목을 입력해주세요"}
               regexState={regexState.title}
             />
@@ -77,7 +77,7 @@ const PostForm = () => {
               name="content"
               placeholder="본문 내용"
               onChange={(e) => handleChange(e)}
-              value={forumData.content}
+              value={postData.content}
               regexMessage={"내용을 입력해주세요"}
               regexState={regexState.content}
             />

@@ -27,10 +27,7 @@ const DetailPage = async (props: {
         {postDetail.author === session?.user?.email && (
           <li className="flex justify-end gap-10 font-semibold text-14 under:border-1 under:border-black under:px-10 under:py-2 under:rounded-sm">
             <Link href={`/edit/${postDetail._id}`}>수정</Link>
-            <DeleteButton
-              id={postDetail._id.toString()}
-              author={postDetail.author}
-            />
+            <DeleteButton id={postDetail._id.toString()} />
           </li>
         )}
         <li className="p-5 border-gray-400 border-b-1">
