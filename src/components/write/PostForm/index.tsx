@@ -13,21 +13,20 @@ const PostForm = () => {
     content: "",
   });
 
-  const [regexState, setRegexState] = useState({
-    title: false,
-    content: false,
+  const [regexWarning, setRegexWarning] = useState({
+    title: "",
+    content: "",
   });
 
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
-    // controlled input
+    // controlled input & set(change) parent's form data state
     const { name, value } = e.target;
-    setPostData((prev) => ({ ...prev, [name]: value }));
+    setPostData((prev: any) => ({ ...prev, [name]: value }));
 
-    // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
-      setRegexState((prev) => ({ ...prev, [name]: true }));
+      setRegexWarning((prev) => ({ ...prev, [name]: "*필수 항목입니다" }));
     } else {
-      setRegexState((prev) => ({ ...prev, [name]: false }));
+      setRegexWarning((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -36,9 +35,7 @@ const PostForm = () => {
     Object.entries(postData).forEach(([key, value]) => {
       if (value.trim() === "") {
         e.preventDefault();
-        setRegexState((prev) => ({ ...prev, [key]: true }));
-      } else {
-        setRegexState((prev) => ({ ...prev, [key]: false }));
+        setRegexWarning((prev) => ({ ...prev, [key]: "*필수 항목입니다" }));
       }
     });
   };
@@ -64,8 +61,7 @@ const PostForm = () => {
               placeholder="글 제목"
               onChange={(e) => handleChange(e)}
               value={postData.title}
-              regexMessage={"제목을 입력해주세요"}
-              regexState={regexState.title}
+              regexWarning={regexWarning.title}
             />
           </div>
           <div className="flex justify-between w-full">
@@ -78,8 +74,7 @@ const PostForm = () => {
               placeholder="본문 내용"
               onChange={(e) => handleChange(e)}
               value={postData.content}
-              regexMessage={"내용을 입력해주세요"}
-              regexState={regexState.content}
+              regexWarning={regexWarning.content}
             />
           </div>
           <div className="flex justify-end w-full gap-20">

@@ -5,14 +5,14 @@ import CustomInput from "@/components/shared/CustomInput";
 const RegisterForm = () => {
   const [registerData, setRegisterData] = useState({
     email: "",
-    pw: "",
-    cpw: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  const [regexState, setRegexState] = useState({
-    email: false,
-    pw: false,
-    cpw: false,
+  const [regexWarning, setRegexWarning] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,9 +21,9 @@ const RegisterForm = () => {
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
-      setRegexState((prev) => ({ ...prev, [name]: true }));
+      setRegexWarning((prev) => ({ ...prev, [name]: true }));
     } else {
-      setRegexState((prev) => ({ ...prev, [name]: false }));
+      setRegexWarning((prev) => ({ ...prev, [name]: false }));
     }
   };
 
@@ -40,11 +40,9 @@ const RegisterForm = () => {
             id="register_email"
             name="email"
             placeholder="이메일"
-            onBlur={() => console.log(123)}
             onChange={(e) => handleChange(e)}
             value={registerData.email}
-            regexState={regexState.email}
-            regexMessage="이메일을 입력해주세요."
+            regexWarning={regexWarning.email}
           />
         </div>
         <div>
@@ -54,9 +52,8 @@ const RegisterForm = () => {
             name="pw"
             placeholder="비밀번호"
             onChange={(e) => handleChange(e)}
-            value={registerData.pw}
-            regexState={regexState.pw}
-            regexMessage="6~20 사이 영문, 숫자, 특수기호 포함"
+            value={registerData.password}
+            regexWarning={regexWarning.password}
           />
         </div>
         <div>
@@ -66,9 +63,8 @@ const RegisterForm = () => {
             name="cpw"
             placeholder="비밀번호 확인"
             onChange={(e) => handleChange(e)}
-            value={registerData.cpw}
-            regexState={regexState.cpw}
-            regexMessage="비밀번호가 틀렸습니다."
+            value={registerData.confirmPassword}
+            regexWarning={regexWarning.confirmPassword}
           />
         </div>
       </form>

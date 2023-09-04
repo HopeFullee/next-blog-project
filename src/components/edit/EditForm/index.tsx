@@ -19,9 +19,9 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
     content: postContent,
   });
 
-  const [regexState, setRegexState] = useState({
-    title: false,
-    content: false,
+  const [regexWarning, setRegexWarning] = useState({
+    title: "",
+    content: "",
   });
 
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
@@ -31,21 +31,17 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
-      setRegexState((prev) => ({ ...prev, [name]: true }));
+      setRegexWarning((prev) => ({ ...prev, [name]: "*필수 항목입니다." }));
     } else {
-      setRegexState((prev) => ({ ...prev, [name]: false }));
+      setRegexWarning((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const formSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {
-    // if input field is null -> trigger regexState to show warning
+    // if input field is null -> prevent default
     Object.entries(forumData).forEach(([key, value]) => {
       if (value.trim() === "") {
         e.preventDefault();
-        setRegexState((prev) => ({ ...prev, [key]: true }));
-      } else {
-        window.location.replace("/list");
-        setRegexState((prev) => ({ ...prev, [key]: false }));
       }
     });
   };
@@ -78,8 +74,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
               placeholder="글 제목"
               onChange={(e) => handleChange(e)}
               value={forumData.title}
-              regexMessage={"제목을 입력해주세요"}
-              regexState={regexState.title}
+              regexWarning={regexWarning.title}
             />
           </div>
           <div className="flex justify-between w-full">
@@ -92,8 +87,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
               placeholder="본문 내용"
               onChange={(e) => handleChange(e)}
               value={forumData.content}
-              regexMessage={"내용을 입력해주세요"}
-              regexState={regexState.content}
+              regexWarning={regexWarning.content}
             />
           </div>
           <div className="flex justify-end w-full gap-20">
