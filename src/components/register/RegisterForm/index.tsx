@@ -66,17 +66,30 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = () => {
-    Object.entries(registerData).forEach(([key, value]) => {
-      if (value.trim() === "") {
-        return setRegexWarning((prev) => ({
-          ...prev,
-          [key]: "*필수 항목입니다.",
-        }));
+    const regexCheck = new Promise((resolve, reject) => {
+      // check for empty fields
+      Object.entries(registerData).forEach(([key, value]) => {
+        if (value.trim() === "") {
+          setRegexWarning((prev) => ({
+            ...prev,
+            [key]: "*필수 항목입니다.",
+          }));
+        }
+      });
+
+      const isWarning = Object.entries(regexWarning).some(([_, warning]) => {
+        return warning !== "";
+      });
+
+      if (isWarning) {
+        reject("전송 못함");
+      } else {
+        resolve("전송 가능");
       }
     });
 
-    Object.entries(regexWarning).forEach(([_, warning]) => {
-      if (!warning) {
+    regexCheck
+      .then(() => {
         fetch("/api/auth/register", {
           method: "POST",
           body: JSON.stringify({
@@ -85,8 +98,10 @@ const RegisterForm = () => {
             confirmPassword: registerData.confirmPassword,
           }),
         });
-      }
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -121,9 +136,9 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register_pw">Confirm Password</label>
+          <label htmlFor="register_cpw">Confirm Password</label>
           <CustomInput
-            id="register_pw"
+            id="register_cpw"
             type="password"
             name="confirmPassword"
             placeholder="비밀번호 확인"
