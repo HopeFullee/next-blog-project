@@ -7,6 +7,8 @@ const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const passwordRe = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
 const RegisterForm = () => {
+  const [isSubmit, setIsSubmit] = useState(false);
+
   const [registerData, setRegisterData] = useState({
     email: "",
     password: "",
@@ -66,42 +68,47 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = () => {
-    const regexCheck = new Promise((resolve, reject) => {
-      // check for empty fields
-      Object.entries(registerData).forEach(([key, value]) => {
-        if (value.trim() === "") {
-          setRegexWarning((prev) => ({
-            ...prev,
-            [key]: "*필수 항목입니다.",
-          }));
+    // check for empty fields
+    const tempState = { ...regexWarning };
+
+    Object.entries(registerData).forEach(([key, value]) => {
+      if (value.trim() === "") {
+        for (const property in tempState) {
+          if (property === key) {
+            (tempState as any)[property] = "*필수 항목입니다.";
+          }
         }
-      });
-
-      const isWarning = Object.entries(regexWarning).some(([_, warning]) => {
-        return warning !== "";
-      });
-
-      if (isWarning) {
-        reject("전송 못함");
-      } else {
-        resolve("전송 가능");
       }
     });
 
-    regexCheck
-      .then(() => {
-        fetch("/api/auth/register", {
-          method: "POST",
-          body: JSON.stringify({
-            email: registerData.email,
-            password: registerData.password,
-            confirmPassword: registerData.confirmPassword,
-          }),
-        });
+    setRegexWarning(tempState);
+
+    const isWarning = Object.entries(tempState).some(([_, warning]) => {
+      return warning !== "";
+    });
+
+    if (!isWarning) {
+      // disable submit button incase of SPAM click
+      setIsSubmit(true);
+      // if no regex warning then request to API
+      fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: registerData.email,
+          password: registerData.password,
+          confirmPassword: registerData.confirmPassword,
+        }),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then(() => {
+          // redirect user after submission
+          window.location.replace("/list");
+        })
+        .catch((error) => {
+          // turn back on submit button if API connection has errors
+          setIsSubmit(false);
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -149,7 +156,7 @@ const RegisterForm = () => {
         </div>
         <div className="flex justify-end w-full gap-20 mt-10 under:border-1 under:border-gray-500 under:px-5 under:py-1 under:rounded-sm">
           <Link href="/">취소</Link>
-          <button type="button" onClick={handleSubmit}>
+          <button disabled={isSubmit} type="button" onClick={handleSubmit}>
             회원가입
           </button>
         </div>

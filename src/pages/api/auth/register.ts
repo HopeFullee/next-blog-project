@@ -6,26 +6,32 @@ const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const passwordRe = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
 const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
-    let { email, password, confirmPassword } = JSON.parse(req.body);
+  try {
+    if (req.method === "POST") {
+      let { email, password, confirmPassword } = JSON.parse(req.body);
 
-    // check regular expression for Email and Password
-    if (emailRe.exec(email) && passwordRe.exec(password)) {
-      // check password is same with confirm password
-      if (password === confirmPassword) {
-        // hash password with bycrpt
-        password = await bcrypt.hash(password, 10);
-
-        const db = (await connectDB).db("forum");
-        const result = db
-          .collection("user_cred")
-          .insertOne({ email, password, confirmPassword });
-
-        return res.status(200).json("회원가입 완료");
+      // check regular expression for Email and Password
+      if (!emailRe.exec(email) || !passwordRe.exec(password)) {
+        return res
+          .status(400)
+          .json("이메일 또는 비밀번호의 형식이 틀렸습니다.");
       }
-    }
 
-    return res.status(500).json("서버 오류");
+      // check password is same with confirm password
+      if (password !== confirmPassword) {
+        return res.status(400).json("비밀번호 확인이 일치하지 않습니다.");
+      }
+
+      // hash password with bycrpt
+      password = await bcrypt.hash(password, 10);
+
+      const db = (await connectDB).db("forum");
+      const result = db.collection("user_cred").insertOne({ email, password });
+
+      return res.status(200).json("회원가입 완료");
+    }
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
 
