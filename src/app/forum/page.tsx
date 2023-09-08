@@ -3,7 +3,7 @@ import ListCard from "@/components/list/ListCard";
 
 export const dynamic = "force-dynamic";
 
-const ListPage = async () => {
+const ForumPage = async () => {
   const response = await fetch("http://localhost:3000/api/list");
   const postData: PostType[] = await response.json();
 
@@ -23,4 +23,4 @@ const ListPage = async () => {
   );
 };
 
-export default ListPage;
+export default ForumPage;

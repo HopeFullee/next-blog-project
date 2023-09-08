@@ -2,7 +2,7 @@ import PostForm from "@/components/write/PostForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-const WritePage = async () => {
+const postPage = async () => {
   const session = await getServerSession(authOptions);
 
   if (session) {
@@ -20,4 +20,4 @@ const WritePage = async () => {
   }
 };
 
-export default WritePage;
+export default postPage;

@@ -22,11 +22,23 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json("비밀번호 확인이 일치하지 않습니다.");
       }
 
+      const db = (await connectDB).db("forum");
+
+      // check for any overlapping emails on DB
+      const duplicateEmail = await db
+        .collection("user_cred")
+        .findOne({ email: email });
+
+      if (duplicateEmail?.email === email) {
+        return res.status(400).json("해당 이메일은 이미 존재합니다.");
+      }
+
       // hash password with bycrpt
       password = await bcrypt.hash(password, 10);
 
-      const db = (await connectDB).db("forum");
-      const result = db.collection("user_cred").insertOne({ email, password });
+      const registerUser = await db
+        .collection("user_cred")
+        .insertOne({ email, password });
 
       return res.status(200).json("회원가입 완료");
     }

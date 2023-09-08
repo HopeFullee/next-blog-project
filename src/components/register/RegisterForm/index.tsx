@@ -101,7 +101,7 @@ const RegisterForm = () => {
       })
         .then(() => {
           // redirect user after submission
-          window.location.replace("/list");
+          window.location.replace("/forum");
         })
         .catch((error) => {
           // turn back on submit button if API connection has errors

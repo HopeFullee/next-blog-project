@@ -17,11 +17,11 @@ const Header = ({ session }: Props) => {
             <Link href={"/"}>MyForum</Link>
           </li>
           <li>
-            <Link href={"/list"}>List</Link>
+            <Link href={"/forum"}>Forum</Link>
           </li>
           {session && (
             <li>
-              <Link href={"/write"}>Write</Link>
+              <Link href={"/post"}>Post</Link>
             </li>
           )}
         </ul>
