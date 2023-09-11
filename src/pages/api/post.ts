@@ -23,7 +23,7 @@ const write = async (req: NextApiRequest, res: NextApiResponse) => {
         title,
         content,
       });
-      return res.redirect(302, "/list");
+      return res.redirect(302, "/forum");
     }
   }
   return res.status(500).send("I messed up");

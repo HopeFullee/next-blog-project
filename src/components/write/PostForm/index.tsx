@@ -46,7 +46,7 @@ const PostForm = () => {
         <h4 className="font-semibold text-18">게시글 작성</h4>
         <form
           onSubmit={(e) => formSubmitHanlder(e)}
-          action="/api/write"
+          action="/api/post"
           method="POST"
           className="w-full gap-40 mt-40 flex-col-center"
         >

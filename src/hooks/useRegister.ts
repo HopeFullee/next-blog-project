@@ -1,17 +1,19 @@
-import { RegisterData } from '@/components/register/RegisterForm';
-import { useState } from 'react';
+import { RegisterData } from "@/components/register/RegisterForm";
+import { useState } from "react";
 
 export const useRegister = () => {
   const [isFetching, setIsFetching] = useState(false);
 
-  const [error, setError] = useState<Record<string, string>>({});
+  const [duplicateError, setDuplicateError] = useState<Record<string, string>>(
+    {}
+  );
 
   const register = async (registerData: RegisterData) => {
     setIsFetching(true);
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
         body: JSON.stringify({
           email: registerData.email,
           password: registerData.password,
@@ -19,19 +21,19 @@ export const useRegister = () => {
         }),
       });
 
-      if (res.ok) window.location.replace('/forum');
+      if (res.ok) window.location.replace("/forum");
       else throw res;
     } catch (err: any) {
       setIsFetching(false);
 
       const errorBody = await err.json();
-      setError(errorBody);
+      setDuplicateError(errorBody);
     }
   };
 
   return {
     isFetching,
-    error,
+    duplicateError,
     register,
   };
 };
