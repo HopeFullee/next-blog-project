@@ -32,7 +32,7 @@ const RegisterForm = () => {
     setRegexWarning((prevState) => ({ ...prevState, ...duplicateError }));
   }, [duplicateError]);
 
-  const errorSet = (formKey: string, errorMsg: string) => {
+  const regexErrorSet = (formKey: string, errorMsg: string) => {
     setRegexWarning((prev) => ({
       ...prev,
       [formKey]: errorMsg,
@@ -45,60 +45,53 @@ const RegisterForm = () => {
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
-      errorSet(name, "*필수 항목입니다.");
+      return regexErrorSet(name, "*필수 항목입니다.");
     }
 
     if (name === "email") {
-      if (!emailRe.exec(value)) errorSet(name, "*이메일 형식이 아닙니다.");
-      else errorSet(name, "");
+      if (!emailRe.exec(value)) regexErrorSet(name, "*이메일 형식이 아닙니다.");
+      else regexErrorSet(name, "");
     }
 
     if (name === "password") {
-      if (!passwordRe.exec(value)) {
-        setRegexWarning((prev) => ({
-          ...prev,
-          [name]: "*8~15, 영문, 숫자, 특수기호 포함.",
-        }));
-      } else {
-        setRegexWarning((prev) => ({ ...prev, [name]: "" }));
-      }
+      if (!passwordRe.exec(value))
+        regexErrorSet(name, "*8~15, 영문, 숫자, 특수기호 포함.");
+      else regexErrorSet(name, "");
     }
 
     if (name === "confirmPassword") {
-      if (value !== registerData.password) {
-        setRegexWarning((prev) => ({
-          ...prev,
-          [name]: "*비밀번호가 일치하지 않습니다.",
-        }));
-      } else {
-        setRegexWarning((prev) => ({ ...prev, [name]: "" }));
-      }
+      if (value !== registerData.password)
+        regexErrorSet(name, "*비밀번호가 일치하지 않습니다.");
+      else setRegexWarning((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  const getEmptyFormKey = () => {
+  const formValidator = () => {
     const emptyFormKeyList: string[] = [];
+    const warningFormKeyList: string[] = [];
 
     Object.entries(registerData).forEach(([key, value]) => {
       if (value.trim() === "") emptyFormKeyList.push(key);
     });
 
-    return emptyFormKeyList;
+    Object.entries(regexWarning).forEach(([key, value]) => {
+      if (value) warningFormKeyList.push(key);
+    });
+
+    return { emptyFormKeyList, warningFormKeyList };
   };
 
   const handleSubmit = () => {
-    const emptyFormKey = getEmptyFormKey();
+    const { emptyFormKeyList, warningFormKeyList } = formValidator();
 
-    emptyFormKey.forEach((formKey) =>
-      setRegexWarning((prevState) => ({
-        ...prevState,
-        [formKey]: "*필수 항목입니다.",
-      }))
+    emptyFormKeyList.forEach((formKey) =>
+      regexErrorSet(formKey, "*필수 항목입니다.")
     );
 
-    if (emptyFormKey.length === 0) {
-      register(registerData);
-    }
+    if (emptyFormKeyList.length !== 0) return;
+    if (warningFormKeyList.length !== 0) return;
+
+    register(registerData);
   };
 
   return (

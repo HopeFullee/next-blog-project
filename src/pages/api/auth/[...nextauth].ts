@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
       //1. 로그인페이지 폼 자동생성해주는 코드
       name: "credentials",
       credentials: {
-        email: { label: "email", type: "text" },
+        email: { label: "email", type: "email" },
         password: { label: "password", type: "password" },
       },
 
@@ -31,7 +31,9 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) {
           console.log("해당 이메일은 없음");
-          return null;
+          throw new Error(
+            JSON.stringify({ email: "*이메일 또는 비밀번호가 틀렸습니다." })
+          );
         }
 
         if (credentials) {
@@ -42,7 +44,9 @@ export const authOptions: NextAuthOptions = {
 
           if (!pwcheck) {
             console.log("비번틀림");
-            return null;
+            throw new Error(
+              JSON.stringify({ email: "*이메일 또는 비밀번호가 틀렸습니다." })
+            );
           }
         }
 
@@ -68,6 +72,10 @@ export const authOptions: NextAuthOptions = {
       session.user = token as any;
       return session;
     },
+  },
+
+  pages: {
+    signIn: "/signin",
   },
 
   secret: process.env.NEXTAUTH_SECRET,
