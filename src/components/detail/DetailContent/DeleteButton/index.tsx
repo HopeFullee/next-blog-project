@@ -19,7 +19,7 @@ const DeleteButton = ({ id, ...rest }: Props) => {
     })
       .then((res) => {
         if (res.status === 200) {
-          window.location.replace("/list");
+          window.location.replace("/forum");
         }
       })
       .catch((error) => {

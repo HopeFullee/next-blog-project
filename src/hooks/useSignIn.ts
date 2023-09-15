@@ -13,7 +13,7 @@ export const useSignIn = () => {
       const res = await signIn("credentials", {
         email: signInData.email,
         password: signInData.password,
-        redirect: false,
+        redirect: true,
         callbackUrl: "/",
       });
 

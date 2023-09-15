@@ -38,9 +38,11 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
       // hash password with bycrpt
       password = await bcrypt.hash(password, 10);
 
+      const userRole = "normal";
+
       const registerUser = await db
         .collection("user_cred")
-        .insertOne({ email, password });
+        .insertOne({ email, password, userRole });
 
       return res.status(200).json("회원가입 완료");
     }

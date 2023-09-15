@@ -3,13 +3,12 @@ import Header from "./Header";
 
 type Props = {
   children: React.ReactNode;
-  session: Session | null;
 };
 
-const Layout = ({ children, session }: Props) => {
+const Layout = ({ children }: Props) => {
   return (
     <>
-      <Header session={session} />
+      <Header />
       {children}
     </>
   );

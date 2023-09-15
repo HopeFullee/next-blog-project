@@ -1,14 +1,12 @@
 "use client";
 
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-type Props = {
-  session: Session | null;
-};
+const Header = () => {
+  const { data: session } = useSession();
 
-const Header = ({ session }: Props) => {
   return (
     <header className="p-20 border-gray-400 border-b-1">
       <nav className="flex justify-between mx-auto max-w-1200">
