@@ -8,7 +8,7 @@ const write = async (req: NextApiRequest, res: NextApiResponse) => {
   if (session) {
     req.body.author = session.user?.email;
   } else {
-    return;
+    return res.status(401).json("로그인을 해주세요.");
   }
 
   const { title, content, author } = req.body;

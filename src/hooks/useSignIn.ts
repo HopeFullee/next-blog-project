@@ -13,11 +13,11 @@ export const useSignIn = () => {
       const res = await signIn("credentials", {
         email: signInData.email,
         password: signInData.password,
-        redirect: true,
+        redirect: false,
         callbackUrl: "/",
       });
 
-      if (res?.ok) return;
+      if (res?.ok) return window.location.replace("/");
       else throw res;
     } catch (err: any) {
       setIsFetching(false);

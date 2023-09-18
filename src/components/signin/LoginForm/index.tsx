@@ -23,6 +23,7 @@ const LoginForm = () => {
   const [regexWarning, setRegexWarning] = useState({
     email: "",
     password: "",
+    authError: "",
   });
 
   useEffect(() => {
@@ -34,6 +35,10 @@ const LoginForm = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (regexWarning.authError) {
+      regexErrorSet("authError", "");
+    }
+
     const { value, name } = e.target;
 
     setSignInData((prev) => ({ ...prev, [name]: value }));
@@ -92,7 +97,7 @@ const LoginForm = () => {
           type="email"
           value={signInData.email}
           onChange={(e) => handleChange(e)}
-          regexWarning={regexWarning.email}
+          regexWarning={regexWarning.email || regexWarning.authError}
         />
       </div>
       <div className="flex flex-col">

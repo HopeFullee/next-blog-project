@@ -24,33 +24,24 @@ export const authOptions: NextAuthOptions = {
       //직접 DB에서 아이디,비번 비교하고
       //아이디,비번 맞으면 return 결과, 틀리면 return null 해야함
       async authorize(credentials) {
-        let db = (await connectDB).db("forum");
-        let user = await db
-          .collection("user_cred")
-          .findOne({ email: credentials?.email });
+        const res = await fetch("http://localhost:3000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            credEmail: credentials?.email,
+            credPassword: credentials?.password,
+          }),
+        });
 
-        if (!user) {
-          console.log("해당 이메일은 없음");
+        const user = await res.json();
+
+        if (res.ok && user) return user as any;
+        else
           throw new Error(
-            JSON.stringify({ email: "*이메일 또는 비밀번호가 틀렸습니다." })
+            JSON.stringify({ authError: "*이메일 또는 비밀번호가 틀렸습니다." })
           );
-        }
-
-        if (credentials) {
-          const pwcheck = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
-
-          if (!pwcheck) {
-            console.log("비번틀림");
-            throw new Error(
-              JSON.stringify({ email: "*이메일 또는 비밀번호가 틀렸습니다." })
-            );
-          }
-        }
-
-        return user as any;
       },
     }),
   ],
@@ -58,7 +49,7 @@ export const authOptions: NextAuthOptions = {
   //3. jwt 써놔야 잘됩니다 + jwt 만료일설정
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, //30일
+    maxAge: 10, //30일
   },
 
   callbacks: {

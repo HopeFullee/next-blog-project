@@ -1,5 +1,4 @@
 import DetailContent from "@/components/detail/DetailContent";
-import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 

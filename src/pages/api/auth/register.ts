@@ -31,7 +31,7 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (duplicateEmail?.email === email) {
         return res.status(400).json({
-          ["email"]: "*사용할수 없는 이메일입니다.",
+          ["duplicateError"]: "*사용할수 없는 이메일입니다.",
         });
       }
 

@@ -26,6 +26,7 @@ const RegisterForm = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    duplicateError: "",
   });
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const RegisterForm = () => {
     }
 
     if (name === "email") {
+      if (regexWarning.duplicateError) regexErrorSet("duplicateError", "");
       if (!emailRe.exec(value)) regexErrorSet(name, "*이메일 형식이 아닙니다.");
       else regexErrorSet(name, "");
     }
@@ -110,7 +112,7 @@ const RegisterForm = () => {
             placeholder="이메일"
             onChange={(e) => handleChange(e)}
             value={registerData.email}
-            regexWarning={regexWarning.email}
+            regexWarning={regexWarning.email || regexWarning.duplicateError}
           />
         </div>
         <div>
