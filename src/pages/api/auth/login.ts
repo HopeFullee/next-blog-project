@@ -10,13 +10,17 @@ const handleLogin = async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await db.collection("user_cred").findOne({ email: credEmail });
 
     if (!user) {
-      return res.status(400).json("이메일 없음");
+      return res
+        .status(400)
+        .json({ authError: "*이메일 또는 비밀번호가 틀렸습니다." });
     }
 
     const pwCheck = await bcrypt.compare(credPassword, user.password);
 
     if (!pwCheck) {
-      return res.status(400).json("비번 틀림");
+      return res
+        .status(400)
+        .json({ authError: "*이메일 또는 비밀번호가 틀렸습니다." });
     }
 
     return res.status(200).json(user);

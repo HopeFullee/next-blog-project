@@ -4,6 +4,7 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/util/database";
 import bcrypt from "bcrypt";
+import axios from "@/lib/axios";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -24,24 +25,19 @@ export const authOptions: NextAuthOptions = {
       //직접 DB에서 아이디,비번 비교하고
       //아이디,비번 맞으면 return 결과, 틀리면 return null 해야함
       async authorize(credentials) {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        try {
+          const res = await axios.post("/api/auth/login", {
             credEmail: credentials?.email,
             credPassword: credentials?.password,
-          }),
-        });
+          });
 
-        const user = await res.json();
+          const user = res.data;
 
-        if (res.ok && user) return user as any;
-        else
-          throw new Error(
-            JSON.stringify({ authError: "*이메일 또는 비밀번호가 틀렸습니다." })
-          );
+          if (user) return user as any;
+          else throw user;
+        } catch (error: any) {
+          throw new Error(JSON.stringify(error.response.data));
+        }
       },
     }),
   ],
