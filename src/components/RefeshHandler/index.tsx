@@ -2,10 +2,12 @@
 
 import { useSession } from "next-auth/react";
 
-export default function Home() {
+const RefreshHandler = () => {
   const { data: session } = useSession();
 
   console.log(session);
 
   return <></>;
-}
+};
+
+export default RefreshHandler;

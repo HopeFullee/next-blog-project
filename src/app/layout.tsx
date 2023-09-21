@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Layout from "@/components/Layout";
 import Providers from "./Providers";
+import RefreshHandler from "@/components/RefeshHandler";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
+          <RefreshHandler />
           <Layout>{children}</Layout>
         </Providers>
       </body>

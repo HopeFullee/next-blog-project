@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CustomInput from "@/components/shared/CustomInput";
 import { useSignIn } from "@/hooks/useSignIn";
-import Link from "next/link";
+import ProviderForm from "./ProviderForm";
 
 const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -86,10 +86,10 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="gap-25 max-w-250 flex-col-center mt-100"
+      className="w-full gap-22 max-w-250 flex-col-center mt-100"
     >
-      <h4 className="font-semibold text-18">Login</h4>
-      <div className="flex flex-col">
+      <h4 className="font-semibold text-18">Sign In</h4>
+      <div className="flex flex-col w-full">
         <label htmlFor="login-email">Email</label>
         <CustomInput
           id="login-email"
@@ -100,7 +100,7 @@ const LoginForm = () => {
           regexWarning={regexWarning.email || regexWarning.authError}
         />
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <label htmlFor="login-password">Password</label>
         <CustomInput
           id="login-password"
@@ -112,11 +112,19 @@ const LoginForm = () => {
         />
       </div>
 
-      <div className="flex justify-end w-full gap-20 mt-10 under:border-1 under:border-gray-500 under:px-5 under:py-1 under:rounded-sm">
-        <Link href="/">취소</Link>
-        <button disabled={isFetching} type="button" onClick={handleSubmit}>
-          로그인
+      <div className="flex justify-end w-full mt-15 under:rounded-sm">
+        <button
+          disabled={isFetching}
+          type="button"
+          onClick={handleSubmit}
+          className="w-full p-5 font-medium bg-blue-200"
+        >
+          Sign In
         </button>
+      </div>
+
+      <div className="w-full mt-10">
+        <ProviderForm />
       </div>
     </form>
   );

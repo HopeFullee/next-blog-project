@@ -9,7 +9,7 @@ const CustomInput = ({ regexWarning, ...rest }: Props) => {
     <div className="relative w-full">
       <input {...rest} className="w-full p-5 outline-none" />
       {regexWarning && (
-        <p className="absolute bottom-[-25px] left-5 text-red-500 text-13">
+        <p className="absolute bottom-[-23px] left-5 text-red-500 text-12">
           {regexWarning}
         </p>
       )}

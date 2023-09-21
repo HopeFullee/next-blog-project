@@ -1,14 +1,16 @@
-import { Session } from "next-auth";
 import Header from "./Header";
+import { getServerSession } from "next-auth/next";
 
 type Props = {
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: Props) => {
+const Layout = async ({ children }: Props) => {
+  const session = await getServerSession();
+
   return (
     <>
-      <Header />
+      <Header session={session} />
       {children}
     </>
   );

@@ -1,8 +1,8 @@
 import LoginForm from "@/components/signin/LoginForm";
 
-const SignInPage = () => {
+const SignInPage = async () => {
   return (
-    <section className="mx-auto max-w-1200 flex-center">
+    <section className="flex-col mx-auto gap-30 max-w-1200 flex-center">
       <LoginForm />
     </section>
   );

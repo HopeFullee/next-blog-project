@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
             credPassword: credentials?.password,
           });
 
-          const user = res.data;
+          const user = await res.data;
 
           if (user) return user as any;
           else throw user;
@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
   //3. jwt 써놔야 잘됩니다 + jwt 만료일설정
   session: {
     strategy: "jwt",
-    maxAge: 10, //30일
+    maxAge: 24 * 60 * 60 * 10, //30일
   },
 
   callbacks: {
