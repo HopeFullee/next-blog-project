@@ -2,15 +2,54 @@ import NextAuth from "next-auth/next";
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { connectDB } from "@/util/database";
-import bcrypt from "bcrypt";
 import axios from "@/lib/axios";
+
+async function refreshAccessToken(token: any) {
+  //1. access token 재발급해달라고 POST요청
+  const url = "https://github.com/login/oauth/access_token";
+  const params = {
+    grant_type: "refresh_token",
+    refresh_token: token.refreshToken,
+    client_id: "Iv1.26c8bc07ba4c65bd",
+    client_secret: "d7e2b8f39d117b7f86174c075a6dbf8d66a748d3",
+  };
+
+  const res = await axios.post(url, null, { params: params });
+  const refreshedTokens = await res.data;
+  if (res.status !== 200) {
+    console.log("실패", refreshedTokens);
+  }
+
+  //2. 재발급한거 출력해보기
+  console.log("토큰 재발급한거 : ");
+  console.log(refreshedTokens);
+  // access_token=ghu_8afeApnRAkzkBYDmshCKqq6uyKJunA1EScAS
+  // &expires_in=28800
+  // &refresh_token=ghr_IZNb9vbPyu8FnSpnP1fLP0DQPq1EVH2JLB6HMOjgBaeGbZSo3dHJihM46QM5cX1odrOUYe1OhZxc
+  // &refresh_token_expires_in=15811200
+  // &scope=
+  // &token_type=bearer
+
+  //3. 이걸로 새로운 토큰 만들어서 return 해주기
+  let data = new URLSearchParams(refreshedTokens);
+  if (data.get("error") == null) {
+    return {
+      ...token,
+      accessToken: data.get("access_token"),
+      accessTokenExpires:
+        Math.round(Date.now() / 1000) + Number(data.get("expires_in")),
+      refreshToken: data.get("refresh_token"),
+    };
+  } else {
+    return token;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: "b0d8c5a04b06a3eae072",
-      clientSecret: "99b8ab9422c365bcad7656dd882c01b05212958b",
+      clientId: "Iv1.26c8bc07ba4c65bd",
+      clientSecret: "d7e2b8f39d117b7f86174c075a6dbf8d66a748d3",
     }),
 
     CredentialsProvider({
@@ -51,12 +90,30 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     //4. jwt 만들 때 실행되는 코드
     //user변수는 DB의 유저정보담겨있고 token.user에 뭐 저장하면 jwt에 들어갑니다.
-    async jwt({ token, user }) {
-      return { ...token, ...user };
+    async jwt({ token, account, user }: any) {
+      if (account && user) {
+        return {
+          acessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          accessTokenExpires: account.expires_at,
+          user,
+        };
+      }
+
+      let timeLeft = token.accessTokenExpires - Math.round(Date.now() / 1000);
+      if (timeLeft < 60 * 60 * 8 - 10) {
+        let newJWT = await refreshAccessToken(token);
+        return newJWT;
+      } else {
+        return token;
+      }
     },
     //5. 유저 세션이 조회될 때 마다 실행되는 코드
-    async session({ session, token }) {
-      session.user = token as any;
+    async session({ session, token }: any) {
+      session.user = token.user;
+      session.accessToken = token.accessToken;
+      session.accessTokenExpires = token.accessTokenExpires;
+      session.error = token.error;
       return session;
     },
   },

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import githubLogo from "@/assets/providerLogo/github.png";
 import { signIn } from "next-auth/react";
 
@@ -16,7 +15,7 @@ const ProviderForm = () => {
           src={githubLogo}
           alt="github"
           className="cursor-pointer w-65 h-65"
-          onClick={() => signIn("github", { callbackUrl: "/" })}
+          onClick={() => signIn("github")}
         />
       </div>
     </>
