@@ -8,12 +8,5 @@ export default function Home() {
 
   console.log(session);
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const codeParam = urlParams.get("code");
-    console.log(codeParam);
-  });
-
   return <></>;
 }
