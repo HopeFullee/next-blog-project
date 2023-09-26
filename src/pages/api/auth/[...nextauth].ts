@@ -1,58 +1,65 @@
 import NextAuth from "next-auth/next";
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "@/lib/axios";
 
 async function refreshAccessToken(provider: string, token: any) {
-  console.log("프로바이더임:" + provider);
+  console.log("프로바이더 누구냐: " + provider);
+  if (provider === "github") {
+    try {
+      //1. access token 재발급해달라고 POST요청
+      const url = "https://github.com/login/oauth/access_token";
+      const params = {
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken,
+        client_id: process.env.GITHUB_APP_ID as string,
+        client_secret: process.env.GITHUB_APP_SECRET as string,
+      };
 
-  try {
-    //1. access token 재발급해달라고 POST요청
-    const url = "https://github.com/login/oauth/access_token";
-    const params = {
-      grant_type: "refresh_token",
-      refresh_token: token.refreshToken,
-      client_id: "Iv1.26c8bc07ba4c65bd",
-      client_secret: "d7e2b8f39d117b7f86174c075a6dbf8d66a748d3",
-    };
+      // 헤더 Accept를 json으로 안받으면 deafult가 URL이라 더럽게 URLSearchParams로 풀어서 return 해야함.
+      const headers = {
+        Accept: "application/json",
+      };
 
-    // 헤더 Accept를 json으로 안받으면 deafult가 URL이라 더럽게 URLSearchParams로 풀어서 return 해야함.
-    const headers = {
-      Accept: "application/json",
-    };
+      const res = await axios.post(url, null, {
+        headers: headers,
+        params: params,
+      });
+      const refreshedTokens = await res.data;
 
-    const res = await axios.post(url, null, {
-      headers: headers,
-      params: params,
-    });
-    const refreshedTokens = await res.data;
+      if (res.status !== 200) {
+        throw refreshedTokens;
+      }
 
-    if (res.status !== 200) {
-      throw refreshedTokens;
+      //2. 이걸로 새로운 토큰 만들어서 return 해주기
+      return {
+        ...token,
+        accessToken: refreshedTokens.access_token,
+        accessTokenExpires:
+          Math.round(Date.now() / 1000) + refreshedTokens.expires_in,
+        refreshToken: refreshedTokens.refresh_token,
+      };
+    } catch (err) {
+      return {
+        token,
+        error: "RefreshAccessTokenError",
+      };
     }
-
-    //2. 이걸로 새로운 토큰 만들어서 return 해주기
-    return {
-      ...token,
-      accessToken: refreshedTokens.access_token,
-      accessTokenExpires:
-        Math.round(Date.now() / 1000) + refreshedTokens.expires_in,
-      refreshToken: refreshedTokens.refresh_token,
-    };
-  } catch (err) {
-    return {
-      token,
-      error: "RefreshAccessTokenError",
-    };
   }
 }
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: "Iv1.26c8bc07ba4c65bd",
-      clientSecret: "d7e2b8f39d117b7f86174c075a6dbf8d66a748d3",
+      clientId: process.env.GITHUB_APP_ID as string,
+      clientSecret: process.env.GITHUB_APP_SECRET as string,
+    }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
 
     CredentialsProvider({
@@ -93,12 +100,13 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     //4. jwt 만들 때 실행되는 코드
     async jwt({ token, account, user }: any) {
+      // refresh 함수에서 누구 provider 인지 판별할 용도로 provider 프로퍼티 추가함
       if (account && user) {
         return {
+          provider: account.provider,
           acessToken: account.access_token,
           refreshToken: account.refresh_token,
           accessTokenExpires: account.expires_at,
-          provider: account.provider,
           user,
         };
       }
@@ -117,7 +125,6 @@ export const authOptions: NextAuthOptions = {
       session.user = token.user;
       session.accessToken = token.accessToken;
       session.accessTokenExpires = token.accessTokenExpires;
-      session.provider = token.provider;
       session.error = token.error;
       return session;
     },
