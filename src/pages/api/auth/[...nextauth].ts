@@ -7,46 +7,63 @@ import axios from "@/lib/axios";
 
 async function refreshAccessToken(provider: string, token: any) {
   console.log("프로바이더 누구냐: " + provider);
+
+  const _PROVIDER = {
+    APP_URL: "",
+    APP_ID: "",
+    APP_SECRET: "",
+  };
+
   if (provider === "github") {
-    try {
-      //1. access token 재발급해달라고 POST요청
-      const url = "https://github.com/login/oauth/access_token";
-      const params = {
-        grant_type: "refresh_token",
-        refresh_token: token.refreshToken,
-        client_id: process.env.GITHUB_APP_ID as string,
-        client_secret: process.env.GITHUB_APP_SECRET as string,
-      };
+    _PROVIDER.APP_URL = "https://github.com/login/oauth/access_token";
+    _PROVIDER.APP_ID = process.env.GITHUB_APP_ID as string;
+    _PROVIDER.APP_SECRET = process.env.GITHUB_APP_SECRET as string;
+  } else if (provider === "google") {
+    _PROVIDER.APP_URL = "https://oauth2.googleapis.com/token";
+    _PROVIDER.APP_ID = process.env.GOOGLE_APP_ID as string;
+    _PROVIDER.APP_SECRET = process.env.GOOGLE_APP_SECRET as string;
+  }
 
-      // 헤더 Accept를 json으로 안받으면 deafult가 URL이라 더럽게 URLSearchParams로 풀어서 return 해야함.
-      const headers = {
-        Accept: "application/json",
-      };
+  try {
+    //1. access token 재발급해달라고 POST요청
+    const url = _PROVIDER.APP_URL;
+    const params = {
+      grant_type: "refresh_token",
+      refresh_token: token.refreshToken,
+      client_id: _PROVIDER.APP_ID,
+      client_secret: _PROVIDER.APP_SECRET,
+    };
 
-      const res = await axios.post(url, null, {
-        headers: headers,
-        params: params,
-      });
-      const refreshedTokens = await res.data;
+    // 헤더 Accept를 json으로 안받으면 deafult가 URL이라 더럽게 URLSearchParams로 풀어서 return 해야함.
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
 
-      if (res.status !== 200) {
-        throw refreshedTokens;
-      }
+    const res = await axios.post(url, null, {
+      headers: headers,
+      params: params,
+    });
 
-      //2. 이걸로 새로운 토큰 만들어서 return 해주기
-      return {
-        ...token,
-        accessToken: refreshedTokens.access_token,
-        accessTokenExpires:
-          Math.round(Date.now() / 1000) + refreshedTokens.expires_in,
-        refreshToken: refreshedTokens.refresh_token,
-      };
-    } catch (err) {
-      return {
-        token,
-        error: "RefreshAccessTokenError",
-      };
+    const refreshedTokens = await res.data;
+
+    if (res.status !== 200) {
+      throw refreshedTokens;
     }
+
+    //2. 이걸로 새로운 토큰 만들어서 return 해주기
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires:
+        Math.round(Date.now() / 1000) + refreshedTokens.expires_in,
+      refreshToken: refreshedTokens.refresh_token,
+    };
+  } catch (err) {
+    return {
+      token,
+      error: "RefreshAccessTokenError",
+    };
   }
 }
 
@@ -60,6 +77,14 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_APP_ID as string,
       clientSecret: process.env.GOOGLE_APP_SECRET as string,
+      authorization: {
+        url: "https://accounts.google.com/o/oauth2/v2/auth?",
+        params: {
+          access_type: "offline",
+          prompt: "consent",
+          response_type: "code",
+        },
+      },
     }),
 
     CredentialsProvider({
@@ -102,6 +127,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, user }: any) {
       // refresh 함수에서 누구 provider 인지 판별할 용도로 provider 프로퍼티 추가함
       if (account && user) {
+        console.log("리프레시 토큰 어카운트에 있냐? " + account.refresh_token);
         return {
           provider: account.provider,
           acessToken: account.access_token,
@@ -122,7 +148,11 @@ export const authOptions: NextAuthOptions = {
     },
     //5. 유저 세션이 조회될 때 마다 실행되는 코드
     async session({ session, token }: any) {
+      console.log("리프레시 토큰 세션으로 넘어갔냐? " + token.refreshToken);
       session.user = token.user;
+      session.rftoken = token.refreshToken
+        ? token.refreshToken
+        : "리프레시 토큰 없음";
       session.accessToken = token.accessToken;
       session.accessTokenExpires = token.accessTokenExpires;
       session.error = token.error;
