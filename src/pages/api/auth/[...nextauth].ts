@@ -5,24 +5,23 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "@/lib/axios";
 
-async function refreshAccessToken(provider: string, token: any) {
-  console.log("프로바이더 누구냐: " + provider);
+type ProviderType = "github" | "google";
 
-  const _PROVIDER = {
-    APP_URL: "",
-    APP_ID: "",
-    APP_SECRET: "",
-  };
+const PROVIDER_MAP = {
+  github: {
+    APP_URL: "https://github.com/login/oauth/access_token",
+    APP_ID: process.env.GITHUB_APP_ID as string,
+    APP_SECRET: process.env.GITHUB_APP_SECRET as string,
+  },
+  google: {
+    APP_URL: "https://oauth2.googleapis.com/token",
+    APP_ID: process.env.GOOGLE_APP_ID as string,
+    APP_SECRET: process.env.GOOGLE_APP_SECRET as string,
+  },
+};
 
-  if (provider === "github") {
-    _PROVIDER.APP_URL = "https://github.com/login/oauth/access_token";
-    _PROVIDER.APP_ID = process.env.GITHUB_APP_ID as string;
-    _PROVIDER.APP_SECRET = process.env.GITHUB_APP_SECRET as string;
-  } else if (provider === "google") {
-    _PROVIDER.APP_URL = "https://oauth2.googleapis.com/token";
-    _PROVIDER.APP_ID = process.env.GOOGLE_APP_ID as string;
-    _PROVIDER.APP_SECRET = process.env.GOOGLE_APP_SECRET as string;
-  }
+async function refreshAccessToken(provider: ProviderType, token: any) {
+  const _PROVIDER = PROVIDER_MAP[provider];
 
   try {
     //1. access token 재발급해달라고 POST요청
@@ -57,7 +56,7 @@ async function refreshAccessToken(provider: string, token: any) {
       accessToken: refreshedTokens.access_token,
       accessTokenExpires:
         Math.round(Date.now() / 1000) + refreshedTokens.expires_in,
-      refreshToken: refreshedTokens.refresh_token,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
     };
   } catch (err) {
     return {
@@ -127,10 +126,9 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, account, user }: any) {
       // refresh 함수에서 누구 provider 인지 판별할 용도로 provider 프로퍼티 추가함
       if (account && user) {
-        console.log("리프레시 토큰 어카운트에 있냐? " + account.refresh_token);
         return {
           provider: account.provider,
-          acessToken: account.access_token,
+          accessToken: account.access_token,
           refreshToken: account.refresh_token,
           accessTokenExpires: account.expires_at,
           user,
@@ -138,21 +136,21 @@ export const authOptions: NextAuthOptions = {
       }
 
       const currTime = Math.round(Date.now() / 1000);
-      const shouldRefreshTime = (token.accessTokenExpires as number) - currTime;
 
-      if (shouldRefreshTime < 60 * 60 * 8 - 10) {
-        return refreshAccessToken(token.provider, token);
-      }
+      const expiresIn =
+        (token.accessTokenExpires as number) - 10 * 60 - currTime;
+
       // 토큰이 만료되지 않았을때는 원래사용하던 토큰을 반환
-      return token;
+      if (expiresIn > 0) {
+        return token;
+      }
+
+      return refreshAccessToken(token.provider, token);
     },
+
     //5. 유저 세션이 조회될 때 마다 실행되는 코드
     async session({ session, token }: any) {
-      console.log("리프레시 토큰 세션으로 넘어갔냐? " + token.refreshToken);
       session.user = token.user;
-      session.rftoken = token.refreshToken
-        ? token.refreshToken
-        : "리프레시 토큰 없음";
       session.accessToken = token.accessToken;
       session.accessTokenExpires = token.accessTokenExpires;
       session.error = token.error;
@@ -168,3 +166,7 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+// http only
+// same site
+// secure
