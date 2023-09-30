@@ -4,6 +4,7 @@ import clsx from "clsx";
 import "./index.scss";
 
 type Props = {
+  modalType: string;
   modalState: boolean;
   closeModal: React.MouseEventHandler<HTMLElement>;
   eventHandler: React.MouseEventHandler<HTMLButtonElement>;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const CustomModal = ({
+  modalType,
   modalState,
   closeModal,
   eventHandler,
@@ -26,14 +28,27 @@ const CustomModal = ({
         )}
       >
         <p>{children}</p>
-        <div className="flex gap-20 under:border-1 under:px-10 under:py-3 under:rounded-sm">
-          <button type="button" onClick={eventHandler}>
-            삭제
-          </button>
-          <button type="button" onClick={closeModal}>
-            취소
-          </button>
-        </div>
+
+        {/* 삭제 전용 */}
+        {modalType === "delete" && (
+          <div className="flex gap-20 under:border-1 under:px-10 under:py-3 under:rounded-sm">
+            <button type="button" onClick={eventHandler}>
+              삭제
+            </button>
+            <button type="button" onClick={closeModal}>
+              취소
+            </button>
+          </div>
+        )}
+
+        {/* 확인 전용 */}
+        {modalType === "confirm" && (
+          <div className="flex gap-20 under:border-1 under:px-10 under:py-3 under:rounded-sm">
+            <button type="button" onClick={closeModal}>
+              확인
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

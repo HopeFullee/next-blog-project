@@ -83,7 +83,7 @@ const RegisterForm = () => {
     return { emptyFormKeyList, warningFormKeyList };
   };
 
-  const handleSubmit = () => {
+  const handleSubmitClick = () => {
     const { emptyFormKeyList, warningFormKeyList } = formValidator();
 
     emptyFormKeyList.forEach((formKey) =>
@@ -141,7 +141,11 @@ const RegisterForm = () => {
         </div>
         <div className="flex justify-end w-full gap-20 mt-10 under:border-1 under:border-gray-500 under:px-5 under:py-1 under:rounded-sm">
           <Link href="/">취소</Link>
-          <button disabled={isFetching} type="button" onClick={handleSubmit}>
+          <button
+            disabled={isFetching}
+            type="button"
+            onClick={handleSubmitClick}
+          >
             회원가입
           </button>
         </div>

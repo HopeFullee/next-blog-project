@@ -2,12 +2,20 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useForumPost } from "@/hooks/useForumPost";
 import CustomInput from "@/components/shared/CustomInput";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
 type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
+export interface PostData {
+  title: string;
+  content: string;
+}
+
 const PostForm = () => {
+  const { post, isFetching } = useForumPost();
+
   const [postData, setPostData] = useState({
     title: "",
     content: "",
@@ -18,26 +26,45 @@ const PostForm = () => {
     content: "",
   });
 
+  const regexErrorSet = (formKey: string, errorMsg: string) => {
+    setRegexWarning((prev) => ({
+      ...prev,
+      [formKey]: errorMsg,
+    }));
+  };
+
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
     // controlled input & set(change) parent's form data state
     const { name, value } = e.target;
     setPostData((prev: any) => ({ ...prev, [name]: value }));
 
     if (value.trim() === "") {
-      setRegexWarning((prev) => ({ ...prev, [name]: "*필수 항목입니다" }));
+      regexErrorSet(name, "*필수 항목입니다");
     } else {
-      setRegexWarning((prev) => ({ ...prev, [name]: "" }));
+      regexErrorSet(name, "");
     }
   };
 
-  const formSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {
-    // if input field is null -> trigger regexState to show warning
+  const formValidator = () => {
+    const emptyFormKeyList: string[] = [];
+
     Object.entries(postData).forEach(([key, value]) => {
-      if (value.trim() === "") {
-        e.preventDefault();
-        setRegexWarning((prev) => ({ ...prev, [key]: "*필수 항목입니다" }));
-      }
+      if (value.trim() === "") emptyFormKeyList.push(key);
     });
+
+    return emptyFormKeyList;
+  };
+
+  const handlePostClick = async () => {
+    const emptyFormKeyList = formValidator();
+
+    emptyFormKeyList.forEach((formkey) => {
+      regexErrorSet(formkey, "*필수 항목입니다");
+    });
+
+    if (emptyFormKeyList.length !== 0) return;
+
+    post(postData);
   };
 
   return (
@@ -45,9 +72,7 @@ const PostForm = () => {
       <div className="mx-auto flex-col-center mt-100 max-w-400">
         <h4 className="font-semibold text-18">게시글 작성</h4>
         <form
-          onSubmit={(e) => formSubmitHanlder(e)}
-          action="/api/post"
-          method="POST"
+          onSubmit={(e) => e.preventDefault}
           className="w-full gap-40 mt-40 flex-col-center"
         >
           <div className="flex justify-between w-full">
@@ -78,7 +103,7 @@ const PostForm = () => {
             />
           </div>
           <div className="flex justify-end w-full gap-20">
-            <Link href={"/list"}>
+            <Link href={"/forum"}>
               <button
                 type="button"
                 className="px-20 py-3 font-semibold border-black border-1 text-14"
@@ -87,7 +112,9 @@ const PostForm = () => {
               </button>
             </Link>
             <button
-              type="submit"
+              type="button"
+              disabled={isFetching}
+              onClick={handlePostClick}
               className="px-20 py-3 font-semibold border-black border-1 text-14"
             >
               등록

@@ -1,4 +1,4 @@
-import PostForm from "@/components/write/PostForm";
+import PostForm from "@/components/post/PostForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 

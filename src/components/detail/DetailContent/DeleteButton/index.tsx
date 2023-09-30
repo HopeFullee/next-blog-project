@@ -32,6 +32,7 @@ const DeleteButton = ({ id, ...rest }: Props) => {
       <button onClick={() => setModalState(true)}>삭제</button>
       {modalState && (
         <CustomModal
+          modalType={"delete"}
           modalState={modalState}
           closeModal={() => setModalState(false)}
           eventHandler={() => handleDeleteClick(id)}
