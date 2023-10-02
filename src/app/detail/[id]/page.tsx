@@ -1,4 +1,5 @@
 import DetailContent from "@/components/detail/DetailContent";
+import axios from "@/lib/axios";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +15,17 @@ const DetailPage = async (props: {
     id: string;
   };
 }) => {
-  const queryString = new URLSearchParams({ id: props.params.id }).toString();
+  const url = "/api/detail";
 
-  const response = await fetch(
-    "http://localhost:3000/api/detail?" + queryString
-  );
+  const params = {
+    id: props.params.id,
+  };
 
-  const postDetail = await response.json();
+  const response = await axios.get(url, {
+    params: params,
+  });
+
+  const postDetail = await response.data;
 
   return (
     <section className="flex-center">
