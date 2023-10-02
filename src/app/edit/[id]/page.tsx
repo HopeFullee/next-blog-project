@@ -1,4 +1,5 @@
 import EditForm from "@/components/edit/EditForm";
+import axios from "@/lib/axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
@@ -9,16 +10,23 @@ const EditPage = async (props: {
     id: string;
   };
 }) => {
-  const queryString = new URLSearchParams({ id: props.params.id }).toString();
+  const url = "/api/detail";
 
-  const response = await fetch(
-    "http://localhost:3000/api/detail?" + queryString
-  );
-  const postDetail = await response.json();
+  const params = {
+    id: props.params.id,
+  };
+
+  const response = await axios.get(url, {
+    params: params,
+  });
+
+  const postDetail = await response.data;
 
   const session = await getServerSession(authOptions);
 
-  if (postDetail.author === session?.user?.email) {
+  const isPostAuthor = postDetail.author === session?.user?.email;
+
+  if (isPostAuthor) {
     return (
       <>
         <EditForm
@@ -30,9 +38,10 @@ const EditPage = async (props: {
     );
   } else {
     return (
-      <>
-        <p>접근 권한이 없습니다.</p>
-      </>
+      <div className="gap-10 flex-col-center mt-100">
+        <p>게시글의 작성자가 아닙니다.</p>
+        <p>You are not the owner of the post.</p>
+      </div>
     );
   }
 };

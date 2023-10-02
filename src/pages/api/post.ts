@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 
-const write = async (req: NextApiRequest, res: NextApiResponse) => {
+const forumPost = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (session) {
     req.body.author = session.user?.email;
@@ -29,4 +29,4 @@ const write = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(500).send("I messed up");
 };
 
-export default write;
+export default forumPost;
