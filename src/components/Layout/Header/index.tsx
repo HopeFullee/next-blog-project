@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Header = ({ session }: any) => {
   return (
-    <header className="p-20 border-gray-400 border-b-1">
+    <header className="p-20 shadow-md shadow-cyan-500/50">
       <nav className="flex justify-between mx-auto max-w-1200">
         <ul className="flex gap-20 font-medium text-20">
           <li>

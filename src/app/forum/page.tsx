@@ -1,22 +1,21 @@
 import { PostType } from "@/types/post";
 import ListCard from "@/components/list/ListCard";
+import axios from "@/lib/axios";
 
 export const dynamic = "force-dynamic";
 
 const ForumPage = async () => {
-  const response = await fetch("http://localhost:3000/api/list");
-  const postData: PostType[] = await response.json();
+  const url = "/api/list";
+
+  const response = await axios.get(url);
+
+  const postList: PostType[] = await response.data;
 
   return (
     <div className="mx-auto max-w-1200">
-      <form action="/api/list" method="GET">
-        <button type="submit">모든 DB POST 내용 조회</button>
-      </form>
-      <ul className="under:w-full flex-col-center gap-30 under:rounded-md mt-100">
-        {postData.map(({ _id, title, content }, idx) => {
-          return (
-            <ListCard key={idx} _id={_id} title={title} content={content} />
-          );
+      <ul className="under:w-full flex-col-center gap-30 mt-100">
+        {postList.map(({ _id, title, postDate }, idx) => {
+          return <ListCard key={idx} _id={_id} title={title} date={postDate} />;
         })}
       </ul>
     </div>

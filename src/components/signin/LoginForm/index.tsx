@@ -117,7 +117,7 @@ const LoginForm = () => {
           disabled={isFetching}
           type="button"
           onClick={handleSubmit}
-          className="w-full p-5 font-medium bg-blue-200"
+          className="w-full p-6 font-medium bg-cyan-500/40"
         >
           Sign In
         </button>

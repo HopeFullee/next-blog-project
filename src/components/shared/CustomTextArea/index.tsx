@@ -9,7 +9,7 @@ const CustomTextArea = ({ regexWarning, ...rest }: Props) => {
     <div className="relative w-full">
       <textarea
         {...rest}
-        className="w-full p-5 outline-none resize-none min-h-150"
+        className="w-full text-[#15202B] p-5 outline-none resize-none min-h-150"
       />
       {regexWarning && (
         <p className="absolute bottom-[-25px] left-5 text-red-500 text-13">

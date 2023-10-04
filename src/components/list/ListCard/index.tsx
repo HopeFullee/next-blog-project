@@ -4,15 +4,23 @@ import Link from "next/link";
 type ListCardProps = {
   _id: ObjectId;
   title: string;
-  content: string;
+  date: {
+    year: string;
+    month: string;
+    date: string;
+    time: {
+      hours: string;
+      minutes: string;
+    };
+  };
 };
 
-const ListCard = ({ _id, title, content }: ListCardProps) => {
+const ListCard = ({ _id, title, date }: ListCardProps) => {
   return (
     <Link href={`/detail/${_id}`}>
-      <li className="p-15 shadow-[3px_3px_12px_lightgray]">
+      <li className="border-b-2 rounded-sm p-15 border-cyan-500/40">
         <h4 className="font-semibold text-20">{title}</h4>
-        <p>{content}</p>
+        <p>{date.year}</p>
       </li>
     </Link>
   );

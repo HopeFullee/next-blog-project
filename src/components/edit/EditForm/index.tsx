@@ -24,6 +24,10 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
     content: "",
   });
 
+  const regexErrorSet = (formkey: string, errorMsg: string) => {
+    setRegexWarning((prev) => ({ ...prev, [formkey]: errorMsg }));
+  };
+
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
     // controlled input
     const { name, value } = e.target;
@@ -31,9 +35,9 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
-      setRegexWarning((prev) => ({ ...prev, [name]: "*필수 항목입니다." }));
+      regexErrorSet(name, "*필수 항목입니다.");
     } else {
-      setRegexWarning((prev) => ({ ...prev, [name]: "" }));
+      regexErrorSet(name, "");
     }
   };
 
@@ -64,7 +68,10 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
             defaultValue={postId}
           />
           <div className="flex justify-between w-full">
-            <label htmlFor="forum_title" className="font-semibold w-50">
+            <label
+              htmlFor="forum_title"
+              className="mt-6 font-semibold text-15 w-50"
+            >
               제목
             </label>
             <CustomInput
@@ -78,7 +85,10 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
             />
           </div>
           <div className="flex justify-between w-full">
-            <label htmlFor="forum_content" className="font-semibold w-50">
+            <label
+              htmlFor="forum_content"
+              className="mt-6 font-semibold text-15 w-50"
+            >
               내용
             </label>
             <CustomTextArea

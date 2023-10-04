@@ -76,27 +76,33 @@ const PostForm = () => {
           className="w-full gap-40 mt-40 flex-col-center"
         >
           <div className="flex justify-between w-full">
-            <label htmlFor="forum_title" className="font-semibold w-50">
+            <label
+              htmlFor="forum_title"
+              className="mt-6 font-semibold w-50 text-15"
+            >
               제목
             </label>
             <CustomInput
               id="forum_title"
               name="title"
               type="text"
-              placeholder="글 제목"
+              placeholder="제목을 입력해주세요."
               onChange={(e) => handleChange(e)}
               value={postData.title}
               regexWarning={regexWarning.title}
             />
           </div>
           <div className="flex justify-between w-full">
-            <label htmlFor="forum_content" className="font-semibold w-50">
+            <label
+              htmlFor="forum_content"
+              className="mt-6 font-semibold w-50 text-15"
+            >
               내용
             </label>
             <CustomTextArea
               id="forum_content"
               name="content"
-              placeholder="본문 내용"
+              placeholder="내용을 입력해주세요."
               onChange={(e) => handleChange(e)}
               value={postData.content}
               regexWarning={regexWarning.content}
@@ -106,7 +112,7 @@ const PostForm = () => {
             <Link href={"/forum"}>
               <button
                 type="button"
-                className="px-20 py-3 font-semibold border-black border-1 text-14"
+                className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
               >
                 취소
               </button>
@@ -115,7 +121,7 @@ const PostForm = () => {
               type="button"
               disabled={isFetching}
               onClick={handlePostClick}
-              className="px-20 py-3 font-semibold border-black border-1 text-14"
+              className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
             >
               등록
             </button>

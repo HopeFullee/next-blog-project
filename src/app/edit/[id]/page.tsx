@@ -2,6 +2,7 @@ import EditForm from "@/components/edit/EditForm";
 import axios from "@/lib/axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import RedirectToForum from "@/components/RedirectToForum";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +25,9 @@ const EditPage = async (props: {
 
   const session = await getServerSession(authOptions);
 
-  const isPostAuthor = postDetail.author === session?.user?.email;
+  const isPostOwner = postDetail.author === session?.user?.email;
 
-  if (isPostAuthor) {
+  if (isPostOwner) {
     return (
       <>
         <EditForm
@@ -37,12 +38,8 @@ const EditPage = async (props: {
       </>
     );
   } else {
-    return (
-      <div className="gap-10 flex-col-center mt-100">
-        <p>게시글의 작성자가 아닙니다.</p>
-        <p>You are not the owner of the post.</p>
-      </div>
-    );
+    // if user is not the owner of the post -> redirect back to forum
+    return <RedirectToForum />;
   }
 };
 

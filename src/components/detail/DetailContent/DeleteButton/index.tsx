@@ -7,7 +7,7 @@ interface Props {
   id: string;
 }
 
-const DeleteButton = ({ id, ...rest }: Props) => {
+const DeleteButton = ({ id }: Props) => {
   const [modalState, setModalState] = useState(false);
 
   const handleDeleteClick = (id: string | undefined) => {
@@ -29,7 +29,12 @@ const DeleteButton = ({ id, ...rest }: Props) => {
 
   return (
     <>
-      <button onClick={() => setModalState(true)}>삭제</button>
+      <button
+        className="hover:text-cyan-500"
+        onClick={() => setModalState(true)}
+      >
+        삭제
+      </button>
       {modalState && (
         <CustomModal
           modalType={"delete"}
