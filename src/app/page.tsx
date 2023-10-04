@@ -20,6 +20,7 @@ export default function Home() {
           <li className="font-medium text-30">Librarys</li>
           <li>Next-Auth</li>
           <li>Axios</li>
+          <li>Tailwind CSS</li>
         </ul>
       </div>
     </section>

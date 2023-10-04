@@ -1,12 +1,12 @@
-import EditForm from "@/components/edit/EditForm";
 import axios from "@/lib/axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import RedirectToForum from "@/components/RedirectToForum";
+import ModifyForm from "@/components/modify/ModifyForm";
 
 export const dynamic = "force-dynamic";
 
-const EditPage = async (props: {
+const ModifyPage = async (props: {
   params: {
     id: string;
   };
@@ -30,10 +30,10 @@ const EditPage = async (props: {
   if (isPostOwner) {
     return (
       <>
-        <EditForm
-          postId={postDetail?._id.toString()}
-          postTitle={postDetail?.title}
-          postContent={postDetail?.content}
+        <ModifyForm
+          id={postDetail?._id.toString()}
+          title={postDetail?.title}
+          content={postDetail?.content}
         />
       </>
     );
@@ -43,4 +43,4 @@ const EditPage = async (props: {
   }
 };
 
-export default EditPage;
+export default ModifyPage;

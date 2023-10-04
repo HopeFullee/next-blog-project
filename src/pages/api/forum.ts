@@ -1,7 +1,7 @@
 import { connectDB } from "@/util/database";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const listHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     const db = (await connectDB).db("forum");
     const result = await db.collection("post").find().toArray();
@@ -10,4 +10,4 @@ const listHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default listHandler;
+export default forum;

@@ -5,7 +5,7 @@ import axios from "@/lib/axios";
 export const dynamic = "force-dynamic";
 
 const ForumPage = async () => {
-  const url = "/api/list";
+  const url = "/api/forum";
 
   const response = await axios.get(url);
 
@@ -14,8 +14,10 @@ const ForumPage = async () => {
   return (
     <div className="mx-auto max-w-1200">
       <ul className="under:w-full flex-col-center gap-30 mt-100">
-        {postList.map(({ _id, title, postDate }, idx) => {
-          return <ListCard key={idx} _id={_id} title={title} date={postDate} />;
+        {postList.map(({ _id, title, createdAt }, idx) => {
+          return (
+            <ListCard key={idx} id={_id} title={title} createdAt={createdAt} />
+          );
         })}
       </ul>
     </div>

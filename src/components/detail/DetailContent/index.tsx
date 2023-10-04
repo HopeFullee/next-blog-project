@@ -14,7 +14,7 @@ const DetailContent = ({ _id, author, title, content }: PostDetail) => {
         <p className="font-semibold text-center text-18">상세 페이지</p>
         {author === session?.user?.email && (
           <li className="flex justify-end gap-10 font-semibold text-14 under:border-1 under:border-cyan-500/40 under:px-10 under:py-2 under:rounded-sm">
-            <Link className="hover:text-cyan-500" href={`/edit/${_id}`}>
+            <Link className="hover:text-cyan-500" href={`/modify/${_id}`}>
               수정
             </Link>
             <DeleteButton id={_id} />

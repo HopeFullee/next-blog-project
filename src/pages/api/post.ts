@@ -13,17 +13,7 @@ const forumPost = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { title, content, author } = req.body;
 
-  const currDate = new Date();
-
-  const postDate = {
-    year: currDate.getFullYear(),
-    month: currDate.getMonth(),
-    date: currDate.getDate(),
-    time: {
-      hours: currDate.getHours(),
-      minutes: currDate.getMinutes(),
-    },
-  };
+  const createdAt = new Date();
 
   if (req.method === "POST") {
     const db = (await connectDB).db("forum");
@@ -31,7 +21,7 @@ const forumPost = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json("비어있는 항목이 존제합니다.");
     } else {
       const post = await db.collection("post").insertOne({
-        postDate,
+        createdAt,
         author,
         title,
         content,

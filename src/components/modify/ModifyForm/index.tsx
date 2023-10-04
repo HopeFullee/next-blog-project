@@ -2,21 +2,25 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useForumModify } from "@/hooks/useForumModify";
 import CustomInput from "@/components/shared/CustomInput";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
 type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
-type Props = {
-  postId: string | undefined;
-  postTitle: string;
-  postContent: string;
-};
+export interface PostModify {
+  id: string;
+  title: string;
+  content: string;
+}
 
-const EditForm = ({ postId, postTitle, postContent }: Props) => {
-  const [forumData, setForumData] = useState({
-    title: postTitle,
-    content: postContent,
+const ModifyForm = ({ id, title, content }: PostModify) => {
+  const { modify, isFetching } = useForumModify();
+
+  const [postData, setPostData] = useState({
+    id: id,
+    title: title,
+    content: content,
   });
 
   const [regexWarning, setRegexWarning] = useState({
@@ -31,7 +35,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
   const handleChange = (e: React.ChangeEvent<InputElements>) => {
     // controlled input
     const { name, value } = e.target;
-    setForumData((prev) => ({ ...prev, [name]: value }));
+    setPostData((prev) => ({ ...prev, [name]: value }));
 
     // if input field is null -> trigger regexState to show warning
     if (value.trim() === "") {
@@ -41,13 +45,26 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
     }
   };
 
-  const formSubmitHanlder = (e: React.FormEvent<HTMLFormElement>) => {
-    // if input field is null -> prevent default
-    Object.entries(forumData).forEach(([key, value]) => {
-      if (value.trim() === "") {
-        e.preventDefault();
-      }
+  const formValidator = () => {
+    const emptyFormKeyList: string[] = [];
+
+    Object.entries(postData).forEach(([key, value]) => {
+      if (value?.trim() === "") emptyFormKeyList.push(key);
     });
+
+    return emptyFormKeyList;
+  };
+
+  const handleModifyClick = () => {
+    const emptyFormKeyList = formValidator();
+
+    emptyFormKeyList.forEach((formkey) => {
+      regexErrorSet(formkey, "*필수 항목입니다.");
+    });
+
+    if (emptyFormKeyList.length !== 0) return;
+
+    modify(postData);
   };
 
   return (
@@ -55,18 +72,10 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
       <div className="mx-auto flex-col-center mt-100 max-w-400">
         <h4 className="font-semibold text-18">게시글 수정</h4>
         <form
-          onSubmit={(e) => formSubmitHanlder(e)}
-          action="/api/edit"
+          onSubmit={(e) => e.preventDefault()}
           method="POST"
           className="w-full gap-40 mt-40 flex-col-center"
         >
-          <input type="hidden" name="_method" value="PATCH" />
-          <input
-            className="hidden"
-            type="hidden"
-            name="_id"
-            defaultValue={postId}
-          />
           <div className="flex justify-between w-full">
             <label
               htmlFor="forum_title"
@@ -80,7 +89,7 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
               type="text"
               placeholder="글 제목"
               onChange={(e) => handleChange(e)}
-              value={forumData.title}
+              value={postData.title}
               regexWarning={regexWarning.title}
             />
           </div>
@@ -96,22 +105,24 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
               name="content"
               placeholder="본문 내용"
               onChange={(e) => handleChange(e)}
-              value={forumData.content}
+              value={postData.content}
               regexWarning={regexWarning.content}
             />
           </div>
           <div className="flex justify-end w-full gap-20">
-            <Link href={`/detail/${postId}`}>
+            <Link href={`/detail/${id}`}>
               <button
                 type="button"
-                className="px-20 py-3 font-semibold border-black border-1 text-14"
+                className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
               >
                 취소
               </button>
             </Link>
             <button
-              type="submit"
-              className="px-20 py-3 font-semibold border-black border-1 text-14"
+              onClick={handleModifyClick}
+              disabled={isFetching}
+              type="button"
+              className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
             >
               수정
             </button>
@@ -122,4 +133,4 @@ const EditForm = ({ postId, postTitle, postContent }: Props) => {
   );
 };
 
-export default EditForm;
+export default ModifyForm;
