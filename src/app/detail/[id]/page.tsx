@@ -1,4 +1,6 @@
 import DetailContent from "@/components/detail/DetailContent";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import axios from "@/lib/axios";
 
 export const dynamic = "force-dynamic";
@@ -15,21 +17,21 @@ const DetailPage = async (props: {
     id: string;
   };
 }) => {
-  const url = "/api/detail";
-
-  const params = {
-    id: props.params.id,
-  };
-
-  const response = await axios.get(url, {
-    params: params,
+  const response = await axios.get("/api/detail", {
+    params: {
+      id: props.params.id,
+    },
   });
 
   const postDetail = await response.data;
 
+  const session = await getServerSession(authOptions);
+
+  const isPostOwner = session?.user?.email === postDetail.author;
+
   return (
     <section className="flex-center">
-      <DetailContent {...postDetail} />
+      <DetailContent {...postDetail} isPostOwner={isPostOwner} />
     </section>
   );
 };

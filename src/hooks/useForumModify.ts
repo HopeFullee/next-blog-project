@@ -9,7 +9,7 @@ export const useForumModify = () => {
     setIsFetching(true);
 
     try {
-      const res = await axios.put("/api/modify", {
+      const res = await axios.put("/api/forum", {
         id: postData.id,
         title: postData.title,
         content: postData.content,

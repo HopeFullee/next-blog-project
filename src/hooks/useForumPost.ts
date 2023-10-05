@@ -9,7 +9,7 @@ export const useForumPost = () => {
     setIsFetching(true);
 
     try {
-      const res = await axios.post("/api/post", {
+      const res = await axios.post("/api/forum", {
         title: postData.title,
         content: postData.content,
       });

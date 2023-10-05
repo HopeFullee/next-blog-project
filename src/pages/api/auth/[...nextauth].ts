@@ -99,7 +99,7 @@ export const authOptions: NextAuthOptions = {
       //아이디,비번 맞으면 return 결과, 틀리면 return null 해야함
       async authorize(credentials) {
         try {
-          const res = await axios.post("/api/auth/login", {
+          const res = await axios.post("/api/authService/login", {
             credEmail: credentials?.email,
             credPassword: credentials?.password,
           });

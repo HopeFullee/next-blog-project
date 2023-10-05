@@ -7,8 +7,9 @@ type Props = {
   modalType: string;
   modalState: boolean;
   closeModal: React.MouseEventHandler<HTMLElement>;
-  eventHandler: React.MouseEventHandler<HTMLButtonElement>;
+  eventHandler?: React.MouseEventHandler<HTMLButtonElement>;
   children: React.ReactNode;
+  isFetching?: boolean;
 };
 
 const CustomModal = ({
@@ -16,6 +17,7 @@ const CustomModal = ({
   modalState,
   closeModal,
   eventHandler,
+  isFetching,
   children,
 }: Props) => {
   return (

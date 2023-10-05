@@ -2,29 +2,32 @@
 
 import { useState } from "react";
 import CustomModal from "@/components/shared/CustomModal";
+import axios from "axios";
 
 interface Props {
   id: string;
 }
 
 const DeleteButton = ({ id }: Props) => {
+  const [isFetching, setIsFetching] = useState(false);
   const [modalState, setModalState] = useState(false);
 
-  const handleDeleteClick = (id: string | undefined) => {
-    fetch("/api/delete", {
-      method: "DELETE",
-      body: JSON.stringify({
-        _id: id,
-      }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          window.location.replace("/forum");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+  const handleDeleteClick = async (id: string | undefined) => {
+    setIsFetching(true);
+
+    try {
+      const res = await axios.delete("/api/forum", {
+        params: {
+          id: id,
+        },
       });
+
+      if (res.status === 200) window.location.replace("/forum");
+      else throw res;
+    } catch (err) {
+      setIsFetching(false);
+      console.log(err);
+    }
   };
 
   return (
@@ -41,6 +44,7 @@ const DeleteButton = ({ id }: Props) => {
           modalState={modalState}
           closeModal={() => setModalState(false)}
           eventHandler={() => handleDeleteClick(id)}
+          isFetching={isFetching}
         >
           리얼루 삭제 하겠습니까
         </CustomModal>
