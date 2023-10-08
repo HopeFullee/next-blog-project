@@ -1,6 +1,6 @@
 import { PostType } from "@/types/post";
-import ListCard from "@/components/list/ListCard";
 import axios from "@/lib/axios";
+import ForumTable from "@/components/Forum/ForumTable";
 
 export const dynamic = "force-dynamic";
 
@@ -12,15 +12,9 @@ const ForumPage = async () => {
   const postList: PostType[] = await response.data;
 
   return (
-    <div className="mx-auto max-w-1200">
-      <ul className="under:w-full flex-col-center gap-30 mt-100">
-        {postList.map(({ _id, title, createdAt }) => {
-          return (
-            <ListCard key={_id} id={_id} title={title} createdAt={createdAt} />
-          );
-        })}
-      </ul>
-    </div>
+    <section className="px-20 mx-auto max-w-1240">
+      <ForumTable postList={postList} />
+    </section>
   );
 };
 
