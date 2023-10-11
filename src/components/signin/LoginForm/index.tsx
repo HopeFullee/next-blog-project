@@ -27,6 +27,7 @@ const LoginForm = () => {
   });
 
   useEffect(() => {
+    console.log(authError);
     setRegexWarning((prev) => ({ ...prev, ...authError }));
   }, [authError]);
 

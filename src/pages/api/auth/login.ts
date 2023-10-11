@@ -11,7 +11,7 @@ const handleLogin = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!user) {
       return res
-        .status(400)
+        .status(401)
         .json({ authError: "*이메일 또는 비밀번호가 틀렸습니다." });
     }
 
@@ -19,11 +19,15 @@ const handleLogin = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!pwCheck) {
       return res
-        .status(400)
+        .status(401)
         .json({ authError: "*이메일 또는 비밀번호가 틀렸습니다." });
     }
 
-    return res.status(200).json(user);
+    return res.status(200).json({
+      email: user.email,
+      role: user.userRole,
+      id: user._id,
+    });
   }
 };
 

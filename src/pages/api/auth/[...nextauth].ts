@@ -99,7 +99,7 @@ export const authOptions: NextAuthOptions = {
       //아이디,비번 맞으면 return 결과, 틀리면 return null 해야함
       async authorize(credentials) {
         try {
-          const res = await axios.post("/api/authService/login", {
+          const res = await axios.post("/api/auth/login", {
             credEmail: credentials?.email,
             credPassword: credentials?.password,
           });
@@ -133,7 +133,10 @@ export const authOptions: NextAuthOptions = {
           accessTokenExpires: account.expires_at,
           user,
         };
+        // 크리덴셜 로그인일 경우 accessToken 발급 API 가 없음으로 그냥 DB의 user 정보만 반환
       }
+
+      if (token.provider === "credentials") return token;
 
       const currTime = Math.round(Date.now() / 1000);
 
