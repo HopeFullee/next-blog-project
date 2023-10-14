@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import { ObjectId } from "mongodb";
-import axios from "axios";
 
 const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -17,9 +16,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     if (!session) return res.status(403).json("접근 권한이 없습니다.");
 
-    req.body.author = session.user?.email;
-
-    const { title, content, author } = req.body;
+    const { title, content } = req.body;
 
     const createdAt = new Date();
 
@@ -29,7 +26,8 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       const post = await db.collection("post").insertOne({
         createdAt,
-        author,
+        ownerId: session.user?.id,
+        author: session.user?.name,
         title,
         content,
       });
@@ -72,7 +70,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("post")
       .findOne({ _id: new ObjectId(id) });
 
-    if (session.user?.email === postOrigin?.author) {
+    if (session.user?.id === postOrigin?.ownerId) {
       const db = (await connectDB).db("forum");
       const deletePost = await db
         .collection("post")

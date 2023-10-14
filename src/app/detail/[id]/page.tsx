@@ -27,7 +27,7 @@ const DetailPage = async (props: {
 
   const session = await getServerSession(authOptions);
 
-  const isPostOwner = session?.user?.email === postDetail.author;
+  const isPostOwner = session?.user?.id === postDetail.ownerId;
 
   return (
     <section className="flex-center">

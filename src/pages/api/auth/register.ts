@@ -3,15 +3,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 
 const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const nameRe = /^([a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]){2,12}$/;
 const passwordRe = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
 const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === "POST") {
-      let { email, password, confirmPassword } = JSON.parse(req.body);
+      let { email, name, password, confirmPassword } = JSON.parse(req.body);
 
-      // check regular expression for Email and Password
-      if (!emailRe.exec(email) || !passwordRe.exec(password)) {
+      // check regular expression for Email, name and Password
+      if (
+        !emailRe.exec(email) ||
+        !nameRe.exec(name) ||
+        !passwordRe.exec(password)
+      ) {
         return res
           .status(400)
           .json("이메일 또는 비밀번호의 형식이 틀렸습니다.");
@@ -29,9 +34,19 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
         .collection("user_cred")
         .findOne({ email: email });
 
-      if (duplicateEmail?.email === email) {
+      if (duplicateEmail) {
         return res.status(400).json({
-          ["duplicateError"]: "*사용할수 없는 이메일입니다.",
+          ["duplicateEmail"]: "*사용할수 없는 이메일입니다.",
+        });
+      }
+
+      const duplicateName = await db
+        .collection("user_cred")
+        .findOne({ name: name });
+
+      if (duplicateName) {
+        return res.status(400).json({
+          ["duplicateName"]: "*사용할수 없는 닉네임입니다.",
         });
       }
 
@@ -42,7 +57,7 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const registerUser = await db
         .collection("user_cred")
-        .insertOne({ email, password, userRole });
+        .insertOne({ email, name, password, userRole });
 
       return res.status(200).json("회원가입 완료");
     }

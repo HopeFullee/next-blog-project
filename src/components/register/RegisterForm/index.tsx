@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useRegister } from "@/hooks/useRegister";
 
 const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const nameRe = /^([a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]){2,12}$/;
 const passwordRe = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 
 export interface RegisterData {
   email: string;
+  name: string;
   password: string;
   confirmPassword: string;
 }
@@ -18,15 +20,18 @@ const RegisterForm = () => {
 
   const [registerData, setRegisterData] = useState({
     email: "",
+    name: "",
     password: "",
     confirmPassword: "",
   });
 
   const [regexWarning, setRegexWarning] = useState({
     email: "",
+    name: "",
     password: "",
     confirmPassword: "",
-    duplicateError: "",
+    duplicateEmail: "",
+    duplicateName: "",
   });
 
   useEffect(() => {
@@ -50,8 +55,14 @@ const RegisterForm = () => {
     }
 
     if (name === "email") {
-      if (regexWarning.duplicateError) regexErrorSet("duplicateError", "");
+      if (regexWarning.duplicateEmail) regexErrorSet("duplicateError", "");
       if (!emailRe.exec(value)) regexErrorSet(name, "*이메일 형식이 아닙니다.");
+      else regexErrorSet(name, "");
+    }
+
+    if (name === "name") {
+      if (regexWarning.duplicateName) regexErrorSet("duplicateName", "");
+      if (!nameRe.exec(value)) regexErrorSet(name, "*2~12, 영문, 한글, 숫자");
       else regexErrorSet(name, "");
     }
 
@@ -112,7 +123,19 @@ const RegisterForm = () => {
             placeholder="이메일"
             onChange={(e) => handleChange(e)}
             value={registerData.email}
-            regexWarning={regexWarning.email || regexWarning.duplicateError}
+            regexWarning={regexWarning.email || regexWarning.duplicateEmail}
+          />
+        </div>
+        <div>
+          <label htmlFor="register_name">Nick name</label>
+          <CustomInput
+            id="register_name"
+            type="text"
+            name="name"
+            placeholder="닉네임"
+            onChange={(e) => handleChange(e)}
+            value={registerData.name}
+            regexWarning={regexWarning.name || regexWarning.duplicateName}
           />
         </div>
         <div>

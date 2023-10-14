@@ -25,6 +25,7 @@ const handleLogin = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({
       email: user.email,
+      name: user.name,
       role: user.userRole,
       id: user._id,
     });

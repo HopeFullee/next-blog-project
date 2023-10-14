@@ -13,9 +13,9 @@ const ForumTable = ({ postList }: Props) => {
       <thead>
         <tr className="under:font-medium under:p-10 border-cyan-500/40 border-b-1">
           <th className="w-[50%]">title</th>
-          <th className="w-[20%]">author</th>
+          <th className="w-[15%]">author</th>
           <th className="w-[15%]">date</th>
-          <th className="w-[7%]">views</th>
+          <th className="w-[6%]">views</th>
         </tr>
       </thead>
       <tbody>

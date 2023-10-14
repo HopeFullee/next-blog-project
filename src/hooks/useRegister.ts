@@ -16,6 +16,7 @@ export const useRegister = () => {
         method: "POST",
         body: JSON.stringify({
           email: registerData.email,
+          name: registerData.name,
           password: registerData.password,
           confirmPassword: registerData.confirmPassword,
         }),

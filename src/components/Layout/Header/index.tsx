@@ -22,7 +22,9 @@ const Header = ({ session }: any) => {
         </ul>
         {session ? (
           <div className="flex items-center gap-20">
-            <p className="font-medium text-18">{session.user?.name}</p>
+            <p className="font-medium text-cyan-500 text-18">
+              {session.user?.name}
+            </p>
             <button onClick={() => signOut()} className="font-medium text-18">
               Sign Out
             </button>

@@ -12,7 +12,7 @@ const ForumPage = async () => {
   const postList: PostType[] = await response.data;
 
   return (
-    <section className="px-20 mx-auto max-w-1240">
+    <section className="px-20 mx-auto max-w-840">
       <ForumTable postList={postList} />
     </section>
   );
