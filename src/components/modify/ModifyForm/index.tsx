@@ -109,22 +109,14 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
               regexWarning={regexWarning.content}
             />
           </div>
-          <div className="flex justify-end w-full gap-20">
-            <Link href={`/detail/${id}`}>
-              <button
-                type="button"
-                className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
-              >
-                취소
-              </button>
-            </Link>
+          <div className="flex justify-end w-full font-semibold gap-15 under:px-20 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
+            <Link href={`/detail/${id}`}>Cancel</Link>
             <button
               onClick={handleModifyClick}
               disabled={isFetching}
               type="button"
-              className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
             >
-              수정
+              Edit
             </button>
           </div>
         </form>

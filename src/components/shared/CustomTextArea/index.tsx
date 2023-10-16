@@ -6,10 +6,10 @@ interface Props extends React.ComponentProps<"textarea"> {
 
 const CustomTextArea = ({ regexWarning, ...rest }: Props) => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-h-150">
       <textarea
         {...rest}
-        className="w-full text-[#15202B] p-5 outline-none resize-none min-h-150"
+        className="w-full text-[#15202B] p-5 outline-none resize-none h-full"
       />
       {regexWarning && (
         <p className="absolute bottom-[-25px] left-5 text-red-500 text-13">

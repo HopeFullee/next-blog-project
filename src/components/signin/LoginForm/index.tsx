@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CustomInput from "@/components/shared/CustomInput";
 import { useSignIn } from "@/hooks/useSignIn";
 import ProviderForm from "./ProviderForm";
+import Link from "next/link";
 
 const emailRe = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -113,15 +114,13 @@ const LoginForm = () => {
         />
       </div>
 
-      <div className="flex justify-end w-full mt-15 under:rounded-sm">
-        <button
-          disabled={isFetching}
-          type="button"
-          onClick={handleSubmit}
-          className="w-full p-6 font-medium bg-cyan-500/40"
-        >
+      <div className="flex justify-end w-full font-medium under:w-full under:p-6 gap-15 mt-15 under:rounded-sm under:bg-cyan-500/25 hover:under:text-cyan-400">
+        <button disabled={isFetching} type="button" onClick={handleSubmit}>
           Sign In
         </button>
+        <Link href="/register" className="text-center">
+          Sign up
+        </Link>
       </div>
 
       <div className="w-full mt-10">

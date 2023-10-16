@@ -25,7 +25,7 @@ const ModifyPage = async (props: {
 
   const session = await getServerSession(authOptions);
 
-  const isPostOwner = postDetail.author === session?.user?.email;
+  const isPostOwner = postDetail.ownerId === session?.user?.id;
 
   if (isPostOwner) {
     return (

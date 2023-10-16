@@ -7,7 +7,7 @@ const Header = ({ session }: any) => {
   return (
     <header className="p-20 shadow-md shadow-cyan-500/50">
       <nav className="flex justify-between mx-auto max-w-1200">
-        <ul className="flex gap-20 font-medium text-20">
+        <ul className="flex gap-20 font-medium text-20 hover:under:text-cyan-400">
           <li>
             <Link href={"/"}>MyForum</Link>
           </li>
@@ -25,16 +25,20 @@ const Header = ({ session }: any) => {
             <p className="font-medium text-cyan-500 text-18">
               {session.user?.name}
             </p>
-            <button onClick={() => signOut()} className="font-medium text-18">
+            <button
+              onClick={() => signOut()}
+              className="font-medium text-18 hover:text-cyan-400"
+            >
               Sign Out
             </button>
           </div>
         ) : (
-          <>
-            <button onClick={() => signIn()} className="font-medium text-18">
-              Sign In
-            </button>
-          </>
+          <button
+            onClick={() => signIn()}
+            className="font-medium text-18 hover:text-cyan-400"
+          >
+            Sign In
+          </button>
         )}
       </nav>
     </header>

@@ -33,10 +33,10 @@ const DeleteButton = ({ id }: Props) => {
   return (
     <>
       <button
-        className="hover:text-cyan-500"
+        className="bg-cyan-500/25 hover:text-cyan-400"
         onClick={() => setModalState(true)}
       >
-        삭제
+        Delete
       </button>
       {modalState && (
         <CustomModal
@@ -46,7 +46,7 @@ const DeleteButton = ({ id }: Props) => {
           eventHandler={() => handleDeleteClick(id)}
           isFetching={isFetching}
         >
-          리얼루 삭제 하겠습니까
+          Post will be deleted
         </CustomModal>
       )}
     </>

@@ -73,7 +73,7 @@ const PostForm = () => {
         <h4 className="font-semibold text-18">게시글 작성</h4>
         <form
           onSubmit={(e) => e.preventDefault}
-          className="w-full gap-40 mt-40 flex-col-center"
+          className="w-full mt-40 gap-35 flex-col-center"
         >
           <div className="flex justify-between w-full">
             <label
@@ -108,22 +108,14 @@ const PostForm = () => {
               regexWarning={regexWarning.content}
             />
           </div>
-          <div className="flex justify-end w-full gap-20">
-            <Link href={"/forum"}>
-              <button
-                type="button"
-                className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
-              >
-                취소
-              </button>
-            </Link>
+          <div className="flex justify-end w-full font-semibold gap-15 under:px-20 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
+            <Link href="/forum">Cancel</Link>
             <button
               type="button"
               disabled={isFetching}
               onClick={handlePostClick}
-              className="px-20 py-3 font-semibold border-cyan-500/40 border-1 text-14 hover:text-cyan-500"
             >
-              등록
+              Post
             </button>
           </div>
         </form>

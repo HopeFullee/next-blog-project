@@ -39,14 +39,14 @@ const CustomModal = ({
               type="button"
               onClick={eventHandler}
             >
-              삭제
+              Delete
             </button>
             <button
               className="hover:text-cyan-500"
               type="button"
               onClick={closeModal}
             >
-              취소
+              Cancel
             </button>
           </div>
         )}

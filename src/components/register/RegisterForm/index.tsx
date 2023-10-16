@@ -162,14 +162,17 @@ const RegisterForm = () => {
             regexWarning={regexWarning.confirmPassword}
           />
         </div>
-        <div className="flex justify-end w-full gap-20 mt-10 under:border-1 under:border-gray-500 under:px-5 under:py-1 under:rounded-sm">
-          <Link href="/">취소</Link>
+        <div className="flex justify-between w-full mt-10 font-semibold under:w-full gap-15 text-14 under:p-6 under:bg-cyan-500/25 under:rounded-sm">
+          <Link href="/" className="text-center hover:text-cyan-400">
+            Cancel
+          </Link>
           <button
             disabled={isFetching}
+            className="hover:text-cyan-400"
             type="button"
             onClick={handleSubmitClick}
           >
-            회원가입
+            Register
           </button>
         </div>
       </form>
