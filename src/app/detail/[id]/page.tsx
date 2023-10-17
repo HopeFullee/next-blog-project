@@ -2,15 +2,9 @@ import DetailContent from "@/components/detail/DetailContent";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import axios from "@/lib/axios";
+import { PostType } from "@/types/post";
 
 export const dynamic = "force-dynamic";
-
-export interface PostDetail {
-  _id: string;
-  author: string;
-  title: string;
-  content: string;
-}
 
 const DetailPage = async (props: {
   params: {
@@ -23,7 +17,7 @@ const DetailPage = async (props: {
     },
   });
 
-  const postDetail = await response.data;
+  const postDetail: PostType = await response.data;
 
   const session = await getServerSession(authOptions);
 

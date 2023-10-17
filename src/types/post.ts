@@ -1,7 +1,8 @@
 export interface PostType {
   _id: string;
-  title: string;
+  ownerId: string;
   author: string;
+  title: string;
   content: string;
   createdAt: string;
 }

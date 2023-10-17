@@ -1,3 +1,4 @@
+import { PostType } from "@/types/post";
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
