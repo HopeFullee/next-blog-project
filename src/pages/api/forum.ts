@@ -9,6 +9,13 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     const db = (await connectDB).db("forum");
     const result = await db.collection("post").find().toArray();
 
+    result.forEach(async ({ ownerId }) => {
+      const db = (await connectDB).db("forum");
+      const result = await db
+        .collection("user_cred")
+        .findOne({ _id: new ObjectId(ownerId) });
+    });
+
     return res.status(200).json(result);
   }
 

@@ -4,6 +4,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "@/lib/axios";
+import { connectDB } from "@/util/database";
 
 type ProviderType = "github" | "google";
 
@@ -123,7 +124,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     //4. jwt 만들 때 실행되는 코드
-    async jwt({ token, account, user }: any) {
+    async jwt({ token, account, user, trigger, session }: any) {
       // refresh 함수에서 누구 provider 인지 판별할 용도로 provider 프로퍼티 추가함
       if (account && user) {
         return {
@@ -133,9 +134,14 @@ export const authOptions: NextAuthOptions = {
           accessTokenExpires: account.expires_at,
           user,
         };
-        // 크리덴셜 로그인일 경우 accessToken 발급 API 가 없음으로 그냥 DB의 user 정보만 반환
       }
 
+      if (trigger === "update" && session.name) {
+        token.user.name = session.name;
+        // token.user = session.user;
+      }
+
+      // 크리덴셜 로그인일 경우 accessToken 및 expires_at 발급 API 가 없음으로 그냥 DB의 user 정보만 반환
       if (token.provider === "credentials") return token;
 
       const currTime = Math.round(Date.now() / 1000);
@@ -154,10 +160,25 @@ export const authOptions: NextAuthOptions = {
     //5. 유저 세션이 조회될 때 마다 실행되는 코드
     async session({ session, token }: any) {
       session.user = token.user;
+      session.provider = token.provider;
       session.accessToken = token.accessToken;
       session.accessTokenExpires = token.accessTokenExpires;
       session.error = token.error;
       return session;
+    },
+
+    async signIn({ profile }) {
+      console.log(
+        "-------------------------------- PROFILE  --------------------------------------"
+      );
+      console.log(profile);
+
+      try {
+        return true;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
     },
   },
 
