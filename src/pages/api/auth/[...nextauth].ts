@@ -116,7 +116,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  //3. jwt 써놔야 잘됩니다 + jwt 만료일설정
+  //3. jwt 만료일 설정 **Oauth 에서 발급받은 jwt는 아래 만료일을 따르지 않음**
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60 * 10, //30일
@@ -141,7 +141,7 @@ export const authOptions: NextAuthOptions = {
         // token.user = session.user;
       }
 
-      // 크리덴셜 로그인일 경우 accessToken 및 expires_at 발급 API 가 없음으로 그냥 DB의 user 정보만 반환
+      // 크리덴셜 로그인일 경우 Token관련 API부재로 expiresIn 조건없이 토큰 반환
       if (token.provider === "credentials") return token;
 
       const currTime = Math.round(Date.now() / 1000);
@@ -159,7 +159,23 @@ export const authOptions: NextAuthOptions = {
 
     //5. 유저 세션이 조회될 때 마다 실행되는 코드
     async session({ session, token }: any) {
-      session.user = token.user;
+      // 자체 회원가입 유저의 origin 정보는 자체서비스 DB에서 받아옴으로 그대로 session에 기입.
+      if (token.provider === "credentials") {
+        session.user = token.user;
+      } else {
+        // Oauth 로그인으로 받은 provider의 origin user 정보는 자체 서비스내에서 DB modify가 불가함으로
+        // 아래 SignIn 함수에서 자체서비스 DB에 회원가입 시킨 정보로 session에 기입.
+        const db = (await connectDB).db("forum");
+        const dbUser = await db
+          .collection("user_cred")
+          .findOne({ providerId: token.user.id });
+
+        session.user = {
+          id: dbUser?._id.toString(), // 몽고DB ObjectId 타입을 string으로 변환안하면 toJSON 해야된다고 오류뜸.
+          email: dbUser?.email,
+          name: dbUser?.name,
+        };
+      }
       session.provider = token.provider;
       session.accessToken = token.accessToken;
       session.accessTokenExpires = token.accessTokenExpires;
@@ -167,14 +183,27 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async signIn({ profile }) {
-      console.log(
-        "-------------------------------- PROFILE  --------------------------------------"
-      );
-      console.log(profile);
-
+    //6. 로그인 시 작동되는 코드
+    async signIn({ user, account }) {
       try {
-        return true;
+        // 자체 회원가입된(크리덴셜) 유저가 아니라면 별도의 회원가입 절차 필요.
+        if (account?.provider !== "credentials") {
+          const db = (await connectDB).db("forum");
+          const userExist = await db
+            .collection("user_cred")
+            .findOne({ providerId: user?.id }); // provider에서 발급받은 고유 user.id로 가입된 유저인지 판독.
+
+          //최초 Oauth 로그인이라면 상단 jwt생성 함수에서 각각 provider에게 발급받은 user 정보로 회원가입
+          if (!userExist) {
+            const register = await db.collection("user_cred").insertOne({
+              providerId: user?.id,
+              email: user?.email ?? user.name, // github같이 email을 private으로 설정할시 null로 들어가는 값을 user.name으로 대체
+              name: user?.name,
+            });
+          }
+        }
+
+        return true; // 로그인 시켜줌
       } catch (err) {
         console.log(err);
         return false;
