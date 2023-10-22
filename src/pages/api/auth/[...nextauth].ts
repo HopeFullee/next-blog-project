@@ -138,7 +138,6 @@ export const authOptions: NextAuthOptions = {
 
       if (trigger === "update" && session.name) {
         token.user.name = session.name;
-        // token.user = session.user;
       }
 
       // 크리덴셜 로그인일 경우 Token관련 API부재로 expiresIn 조건없이 토큰 반환
@@ -199,6 +198,7 @@ export const authOptions: NextAuthOptions = {
               providerId: user?.id,
               email: user?.email ?? user.name, // github같이 email을 private으로 설정할시 null로 들어가는 값을 user.name으로 대체
               name: user?.name,
+              role: "normal",
             });
           }
         }

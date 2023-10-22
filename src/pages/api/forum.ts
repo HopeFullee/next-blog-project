@@ -7,16 +7,20 @@ import { ObjectId } from "mongodb";
 const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     const db = (await connectDB).db("forum");
-    const result = await db.collection("post").find().toArray();
+    const postArr = await db.collection("post").find().toArray();
 
-    result.forEach(async ({ ownerId }) => {
+    const promise = postArr.map(async ({ ownerId }, idx) => {
       const db = (await connectDB).db("forum");
-      const result = await db
+      const author = await db
         .collection("user_cred")
         .findOne({ _id: new ObjectId(ownerId) });
+
+      postArr[idx].author = author?.name;
     });
 
-    return res.status(200).json(result);
+    await Promise.all(promise);
+
+    return res.status(200).json(postArr);
   }
 
   if (req.method === "POST") {
@@ -34,7 +38,6 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
       const post = await db.collection("post").insertOne({
         createdAt,
         ownerId: session.user?.id,
-        author: session.user?.name,
         title,
         content,
       });

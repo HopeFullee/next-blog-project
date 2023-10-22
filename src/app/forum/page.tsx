@@ -5,9 +5,7 @@ import ForumTable from "@/components/Forum/ForumTable";
 export const dynamic = "force-dynamic";
 
 const ForumPage = async () => {
-  const url = "/api/forum";
-
-  const response = await axios.get(url);
+  const response = await axios.get("/api/forum");
 
   const postList: PostType[] = await response.data;
 
