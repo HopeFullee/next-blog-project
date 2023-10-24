@@ -92,7 +92,12 @@ const LoginForm = () => {
     >
       <h4 className="font-semibold text-18">Sign In</h4>
       <div className="flex flex-col w-full">
-        <label htmlFor="login-email">Email</label>
+        <label
+          htmlFor="login-email"
+          className="font-semibold text-15 text-cyan-400"
+        >
+          Email
+        </label>
         <CustomInput
           id="login-email"
           name="email"
@@ -103,7 +108,12 @@ const LoginForm = () => {
         />
       </div>
       <div className="flex flex-col w-full">
-        <label htmlFor="login-password">Password</label>
+        <label
+          htmlFor="login-password"
+          className="font-semibold text-15 text-cyan-400"
+        >
+          Password
+        </label>
         <CustomInput
           id="login-password"
           name="password"

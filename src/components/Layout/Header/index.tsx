@@ -1,12 +1,17 @@
 "use client";
 
+import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-const Header = ({ session }: any) => {
+interface Props {
+  session?: Session | null;
+}
+
+const Header = ({ session }: Props) => {
   return (
     <header className="p-20 shadow-md shadow-cyan-500/50">
-      <nav className="flex justify-between mx-auto max-w-1200">
+      <nav className="flex justify-between mx-auto max-w-1000">
         <ul className="flex gap-20 font-medium text-20 hover:under:text-cyan-400">
           <li>
             <Link href={"/"}>MyForum</Link>
@@ -22,8 +27,10 @@ const Header = ({ session }: any) => {
         </ul>
         {session ? (
           <div className="flex items-center gap-20 text-18">
-            <Link href={"/profile"}>Edit Profile</Link>
-            <p className="font-medium text-cyan-500">{session.user?.name}</p>
+            <p className="font-medium text-cyan-400">{session.user?.name}</p>
+            <Link className="font-medium hover:text-cyan-400" href={"/profile"}>
+              My Page
+            </Link>
             <button
               onClick={() => signOut()}
               className="font-medium hover:text-cyan-400"

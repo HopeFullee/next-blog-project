@@ -1,9 +1,9 @@
-import ProfileInfo from "@/components/profile/ProfileInfo";
+import ProfileForm from "@/components/profile/ProfileForm";
 
 const Profile = () => {
   return (
-    <section className="px-20 mx-auto max-w-840">
-      <ProfileInfo />
+    <section className="px-20">
+      <ProfileForm />
     </section>
   );
 };

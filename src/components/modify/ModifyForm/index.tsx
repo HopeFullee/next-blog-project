@@ -78,13 +78,13 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
         >
           <div className="flex justify-between w-full">
             <label
-              htmlFor="forum_title"
+              htmlFor="forum-title"
               className="mt-6 font-semibold text-15 w-50"
             >
               제목
             </label>
             <CustomInput
-              id="forum_title"
+              id="forum-title"
               name="title"
               type="text"
               placeholder="글 제목"
@@ -95,13 +95,13 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
           </div>
           <div className="flex justify-between w-full">
             <label
-              htmlFor="forum_content"
+              htmlFor="forum-content"
               className="mt-6 font-semibold text-15 w-50"
             >
               내용
             </label>
             <CustomTextArea
-              id="forum_content"
+              id="forum-content"
               name="content"
               placeholder="본문 내용"
               onChange={(e) => handleChange(e)}
@@ -109,7 +109,7 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
               regexWarning={regexWarning.content}
             />
           </div>
-          <div className="flex justify-end w-full font-semibold gap-15 under:px-20 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
+          <div className="flex justify-end w-full font-semibold gap-15 under:px-15 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
             <Link href={`/detail/${id}`}>Cancel</Link>
             <button
               onClick={handleModifyClick}

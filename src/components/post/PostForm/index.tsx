@@ -77,13 +77,13 @@ const PostForm = () => {
         >
           <div className="flex justify-between w-full">
             <label
-              htmlFor="forum_title"
+              htmlFor="forum-title"
               className="mt-6 font-semibold w-50 text-15"
             >
               제목
             </label>
             <CustomInput
-              id="forum_title"
+              id="forum-title"
               name="title"
               type="text"
               placeholder="제목을 입력해주세요."
@@ -94,13 +94,13 @@ const PostForm = () => {
           </div>
           <div className="flex justify-between w-full">
             <label
-              htmlFor="forum_content"
+              htmlFor="forum-content"
               className="mt-6 font-semibold w-50 text-15"
             >
               내용
             </label>
             <CustomTextArea
-              id="forum_content"
+              id="forum-content"
               name="content"
               placeholder="내용을 입력해주세요."
               onChange={(e) => handleChange(e)}
@@ -108,7 +108,7 @@ const PostForm = () => {
               regexWarning={regexWarning.content}
             />
           </div>
-          <div className="flex justify-end w-full font-semibold gap-15 under:px-20 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
+          <div className="flex justify-end w-full font-semibold gap-15 under:px-15 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
             <Link href="/forum">Cancel</Link>
             <button
               type="button"

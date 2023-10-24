@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "@/lib/axios";
 import { useSession } from "next-auth/react";
 
 export default function Home() {

@@ -8,11 +8,18 @@ const postDetail = async (req: NextApiRequest, res: NextApiResponse) => {
     const id = req.query.id?.toString();
 
     const db = (await connectDB).db("forum");
-    const result = await db
+    const postDetail = await db
       .collection("post")
       .findOne({ _id: new ObjectId(id) });
 
-    return res.status(200).json(result);
+    // find the post owner's name by unique ownerId
+    const author = await db
+      .collection("user_cred")
+      .findOne({ _id: new ObjectId(postDetail?.ownerId) });
+
+    if (postDetail) postDetail.author = author?.name;
+
+    return res.status(200).json(postDetail);
   }
 };
 

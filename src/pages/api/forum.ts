@@ -9,6 +9,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     const db = (await connectDB).db("forum");
     const postArr = await db.collection("post").find().toArray();
 
+    // find the post owner's name by unique ownerId
     const promise = postArr.map(async ({ ownerId }, idx) => {
       const db = (await connectDB).db("forum");
       const author = await db

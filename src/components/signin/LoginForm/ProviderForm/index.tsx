@@ -8,7 +8,7 @@ const ProviderForm = () => {
     <>
       <div className="w-full gap-10 flex-center">
         <span className="w-full h-1 border-dashed border-cyan-500/40 border-t-1"></span>
-        <p className="font-medium">or</p>
+        <p className="font-semibold text-15 text-cyan-400">or</p>
         <span className="w-full h-1 border-dashed border-cyan-500/40 border-t-1"></span>
       </div>
       <nav className="mt-20 gap-15 flex-center">

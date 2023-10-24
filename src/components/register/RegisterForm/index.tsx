@@ -115,9 +115,9 @@ const RegisterForm = () => {
       >
         <p>회원가입</p>
         <div>
-          <label htmlFor="register_email">Email</label>
+          <label htmlFor="register-email">Email</label>
           <CustomInput
-            id="register_email"
+            id="register-email"
             type="email"
             name="email"
             placeholder="이메일"
@@ -127,9 +127,9 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register_name">Nick name</label>
+          <label htmlFor="register-name">Nick name</label>
           <CustomInput
-            id="register_name"
+            id="register-name"
             type="text"
             name="name"
             placeholder="닉네임"
@@ -139,9 +139,9 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register_pw">Password</label>
+          <label htmlFor="register-pw">Password</label>
           <CustomInput
-            id="register_pw"
+            id="register-pw"
             type="password"
             name="password"
             placeholder="비밀번호"
@@ -151,9 +151,9 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register_cpw">Confirm Password</label>
+          <label htmlFor="register-cpw">Confirm Password</label>
           <CustomInput
-            id="register_cpw"
+            id="register-cpw"
             type="password"
             name="confirmPassword"
             placeholder="비밀번호 확인"
