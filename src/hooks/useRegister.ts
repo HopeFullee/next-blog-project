@@ -1,4 +1,5 @@
 import { RegisterData } from "@/components/register/RegisterForm";
+import axios from "@/lib/axios";
 import { useState } from "react";
 
 export const useRegister = () => {
@@ -12,22 +13,21 @@ export const useRegister = () => {
     setIsFetching(true);
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({
-          email: registerData.email,
-          name: registerData.name,
-          password: registerData.password,
-          confirmPassword: registerData.confirmPassword,
-        }),
+      const res = await axios.post("/api/auth/register", {
+        email: registerData.email,
+        name: registerData.name,
+        password: registerData.password,
+        confirmPassword: registerData.confirmPassword,
       });
 
-      if (res.ok) window.location.replace("/forum");
+      if (res.status === 200) window.location.replace("/forum");
       else throw res;
     } catch (err: any) {
       setIsFetching(false);
 
-      const errorBody = await err.json();
+      console.log(err.response.data);
+
+      const errorBody = await err.response.data;
       setDuplicateError(errorBody);
     }
   };

@@ -18,7 +18,7 @@ export interface RegisterData {
 const RegisterForm = () => {
   const { isFetching, register, duplicateError } = useRegister();
 
-  const [registerData, setRegisterData] = useState({
+  const [registerData, setRegisterData] = useState<RegisterData>({
     email: "",
     name: "",
     password: "",
@@ -55,7 +55,7 @@ const RegisterForm = () => {
     }
 
     if (name === "email") {
-      if (regexWarning.duplicateEmail) regexErrorSet("duplicateError", "");
+      if (regexWarning.duplicateEmail) regexErrorSet("duplicateEmail", "");
       if (!emailRe.exec(value)) regexErrorSet(name, "*이메일 형식이 아닙니다.");
       else regexErrorSet(name, "");
     }
@@ -113,9 +113,14 @@ const RegisterForm = () => {
         onSubmit={(e) => e.preventDefault}
         className="gap-30 mt-100 flex-col-center"
       >
-        <p>회원가입</p>
+        <p className="font-semibold text-18">Credentials Register</p>
         <div>
-          <label htmlFor="register-email">Email</label>
+          <label
+            htmlFor="register-email"
+            className="font-semibold text-15 text-cyan-400"
+          >
+            Email
+          </label>
           <CustomInput
             id="register-email"
             type="email"
@@ -127,7 +132,12 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register-name">Nick name</label>
+          <label
+            htmlFor="register-name"
+            className="font-semibold text-15 text-cyan-400"
+          >
+            Nick name
+          </label>
           <CustomInput
             id="register-name"
             type="text"
@@ -139,7 +149,12 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register-pw">Password</label>
+          <label
+            htmlFor="register-pw"
+            className="font-semibold text-15 text-cyan-400"
+          >
+            Password
+          </label>
           <CustomInput
             id="register-pw"
             type="password"
@@ -151,7 +166,12 @@ const RegisterForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="register-cpw">Confirm Password</label>
+          <label
+            htmlFor="register-cpw"
+            className="font-semibold text-15 text-cyan-400"
+          >
+            Confirm Password
+          </label>
           <CustomInput
             id="register-cpw"
             type="password"

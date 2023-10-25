@@ -1,16 +1,22 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useProfileModify } from "@/hooks/useProfileModify";
 import CustomInput from "@/components/shared/CustomInput";
 import LoadingAnim from "@/components/shared/LoadingAnim";
 
 const nameRe = /^([a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]){2,12}$/;
 
+export interface ProfileData {
+  name: string | undefined;
+}
+
 const ProfileForm = () => {
+  const { profileModify, duplicateError, isFetching } = useProfileModify();
   const { data: session, status } = useSession();
 
-  const [profileData, setProfileData] = useState({
+  const [profileData, setProfileData] = useState<ProfileData>({
     name: session?.user.name,
   });
 
@@ -19,6 +25,10 @@ const ProfileForm = () => {
   });
 
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    setRegexWarning((prevState) => ({ ...prevState, ...duplicateError }));
+  }, [duplicateError]);
 
   const regexErrorSet = (formKey: string, errorMsg: string) => {
     setRegexWarning((prev) => ({ ...prev, [formKey]: errorMsg }));
@@ -50,7 +60,7 @@ const ProfileForm = () => {
     const emptyFormKeyList: string[] = [];
 
     Object.entries(profileData).forEach(([key, value]) => {
-      if (value.trim() === "") emptyFormKeyList.push(key);
+      if (value?.trim() === "") emptyFormKeyList.push(key);
     });
 
     return emptyFormKeyList;
@@ -64,6 +74,8 @@ const ProfileForm = () => {
     });
 
     if (emptyFormKeyList.length !== 0) return;
+
+    profileModify(profileData);
   };
 
   return (
@@ -113,6 +125,15 @@ const ProfileForm = () => {
             </div>
             <div className="mt-20">
               <label
+                htmlFor="user-provider"
+                className="font-semibold text-15 text-cyan-400"
+              >
+                Provider
+              </label>
+              <p className="py-5">{session?.provider}</p>
+            </div>
+            <div className="mt-20">
+              <label
                 htmlFor="user-role"
                 className="font-semibold text-15 text-cyan-400"
               >
@@ -126,7 +147,9 @@ const ProfileForm = () => {
       {editMode && (
         <div className="flex justify-end w-full font-semibold gap-15 under:px-15 under:py-6 under:bg-cyan-500/25 text-14 under:rounded-sm hover:under:text-cyan-400">
           <button onClick={editModeClick}>Cancel</button>
-          <button>Submit</button>
+          <button onClick={handleSubmitClick} disabled={isFetching}>
+            Submit
+          </button>
         </div>
       )}
     </article>

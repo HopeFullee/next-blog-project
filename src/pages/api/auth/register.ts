@@ -9,7 +9,7 @@ const passwordRe = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
 const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === "POST") {
-      let { email, name, password, confirmPassword } = JSON.parse(req.body);
+      let { email, name, password, confirmPassword } = req.body;
 
       // check regular expression for Email, name and Password
       if (
@@ -36,7 +36,7 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (duplicateEmail) {
         return res.status(400).json({
-          ["duplicateEmail"]: "*사용할수 없는 이메일입니다.",
+          duplicateEmail: "*사용할수 없는 이메일입니다.",
         });
       }
 
@@ -46,7 +46,7 @@ const handleRegister = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (duplicateName) {
         return res.status(400).json({
-          ["duplicateName"]: "*사용할수 없는 닉네임입니다.",
+          duplicateName: "*사용할수 없는 닉네임입니다.",
         });
       }
 
