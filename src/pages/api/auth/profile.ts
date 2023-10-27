@@ -11,7 +11,7 @@ const profile = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     const { name } = req.body;
 
-    if (nameRe.exec(name))
+    if (!nameRe.exec(name))
       return res.status(400).json("닉네임 형식이 틀렸습니다.");
 
     const db = (await connectDB).db("forum");

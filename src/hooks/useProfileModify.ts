@@ -1,9 +1,11 @@
 import { ProfileData } from "@/components/profile/ProfileForm";
 import axios from "@/lib/axios";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export const useProfileModify = () => {
   const [isFetching, setIsFetching] = useState(false);
+  const { update: sessionUpdate } = useSession();
 
   const [duplicateError, setDuplicateError] = useState<Record<string, string>>(
     {}
@@ -17,8 +19,10 @@ export const useProfileModify = () => {
         name: profileData.name,
       });
 
-      if (res.status === 200) window.location.replace("/profile");
-      else throw res;
+      if (res.status === 200) {
+        window.location.replace("/profile");
+        sessionUpdate({ name: profileData.name });
+      } else throw res;
     } catch (err: any) {
       setIsFetching(false);
 
