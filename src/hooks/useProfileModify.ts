@@ -20,8 +20,8 @@ export const useProfileModify = () => {
       });
 
       if (res.status === 200) {
+        await sessionUpdate({ name: profileData.name });
         window.location.replace("/profile");
-        sessionUpdate({ name: profileData.name });
       } else throw res;
     } catch (err: any) {
       setIsFetching(false);

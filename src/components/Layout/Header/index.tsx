@@ -1,10 +1,8 @@
 "use client";
 
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
 
 interface Props {
   session?: Session | null;

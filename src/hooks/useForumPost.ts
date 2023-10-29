@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PostData } from "@/components/post/PostForm";
+import { useSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 export const useForumPost = () => {
