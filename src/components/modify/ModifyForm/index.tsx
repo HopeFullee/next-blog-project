@@ -70,7 +70,7 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
   return (
     <div>
       <div className="mx-auto flex-col-center mt-100 max-w-400">
-        <h4 className="font-semibold text-18">게시글 수정</h4>
+        <h4 className="font-semibold text-18">Edit Post</h4>
         <form
           onSubmit={(e) => e.preventDefault()}
           method="POST"

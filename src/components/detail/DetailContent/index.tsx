@@ -56,7 +56,7 @@ const DetailContent = ({
   return (
     <>
       <ul className="flex flex-col w-full max-w-500 mt-100 ">
-        <p className="font-semibold text-center text-18">상세 페이지</p>
+        <p className="font-semibold text-center text-18">Post Detail</p>
         {isPostOwner && (
           <li className="flex justify-end gap-10 font-semibold text-14 under:px-20 under:py-6 under:rounded-sm">
             <Link

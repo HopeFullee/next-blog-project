@@ -28,6 +28,14 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await getServerSession(req, res, authOptions);
     if (!session) return res.status(403).json("접근 권한이 없습니다.");
 
+    const isAuthenticated = await userAuthenticator(
+      session.accessToken,
+      session.provider
+    );
+
+    console.log("------------ ??인증함?? --------------");
+    console.log(isAuthenticated);
+
     const { title, content } = req.body;
 
     const createdAt = new Date();
@@ -94,6 +102,25 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(500).json("server error");
 };
 
-const isAuthorizedUser = () => {};
+const userAuthenticator = async (
+  accessToken: string | undefined,
+  provider: string
+) => {
+  // 일반 회원가입 유저는 accessToken 발급 API 가 없으므로 true 반환
+  if (provider === "credentials") {
+    return true;
+  } else if (provider === "github") {
+    const res = fetch("https://api.github.com/octocat", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+
+    const isAuthenticated = (await res).status;
+
+    return isAuthenticated;
+  }
+};
 
 export default forum;

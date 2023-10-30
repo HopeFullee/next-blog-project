@@ -46,7 +46,7 @@ const DeleteButton = ({ id }: Props) => {
           eventHandler={() => handleDeleteClick(id)}
           isFetching={isFetching}
         >
-          Post will be deleted
+          Delete Post ?
         </CustomModal>
       )}
     </>

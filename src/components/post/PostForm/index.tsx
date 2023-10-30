@@ -70,7 +70,7 @@ const PostForm = () => {
   return (
     <div>
       <div className="mx-auto flex-col-center mt-100 max-w-400">
-        <h4 className="font-semibold text-18">게시글 작성</h4>
+        <h4 className="font-semibold text-18">Forum Post</h4>
         <form
           onSubmit={(e) => e.preventDefault}
           className="w-full mt-40 gap-35 flex-col-center"
