@@ -129,7 +129,7 @@ export const authOptions: NextAuthOptions = {
       if (account && user) {
         return {
           provider: account.provider,
-          accessToken: account.access_token,
+          accessToken: account.access_token ?? "CREDENTIALS-DUMMY-TOKEN",
           refreshToken: account.refresh_token,
           accessTokenExpires: account.expires_at,
           user,
@@ -140,7 +140,7 @@ export const authOptions: NextAuthOptions = {
         token.user.name = session.name;
       }
 
-      // 크리덴셜 로그인일 경우 Token관련 API부재로 expiresIn 조건없이 토큰 반환
+      // 크리덴셜 로그인일 경우 Token관련 API부재로 expiresIn(line:152) 조건없이 토큰 반환
       if (token.provider === "credentials") return token;
 
       const currTime = Math.round(Date.now() / 1000);

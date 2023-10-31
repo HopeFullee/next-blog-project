@@ -14,7 +14,6 @@ export const useSignIn = () => {
         email: signInData.email,
         password: signInData.password,
         redirect: false,
-        callbackUrl: "/",
       });
 
       if (res?.ok) return window.location.replace("/");

@@ -25,16 +25,11 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "POST") {
+    if (!req.headers.authorization) {
+      return res.status(403).json("접근 권한이 없습니다.");
+    }
+
     const session = await getServerSession(req, res, authOptions);
-    if (!session) return res.status(403).json("접근 권한이 없습니다.");
-
-    const isAuthenticated = await userAuthenticator(
-      session.accessToken,
-      session.provider
-    );
-
-    console.log("------------ ??인증함?? --------------");
-    console.log(isAuthenticated);
 
     const { title, content } = req.body;
 
@@ -46,7 +41,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     } else {
       const post = await db.collection("post").insertOne({
         createdAt,
-        ownerId: session.user?.id,
+        ownerId: session?.user.id,
         title,
         content,
       });
@@ -55,8 +50,9 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "PUT") {
-    const session = await getServerSession(req, res, authOptions);
-    if (!session) return res.status(403).json("접근 권한이 없습니다.");
+    if (!req.headers.authorization) {
+      return res.status(403).json("접근 권한이 없습니다.");
+    }
 
     const { id, title, content } = req.body;
 
@@ -79,8 +75,11 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "DELETE") {
+    if (!req.headers.authorization) {
+      return res.status(403).json("접근 권한이 없습니다.");
+    }
+
     const session = await getServerSession(req, res, authOptions);
-    if (!session) return res.status(403).json("접근 권한이 없습니다.");
 
     const id = req.query.id?.toString();
 
@@ -89,7 +88,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("post")
       .findOne({ _id: new ObjectId(id) });
 
-    if (session.user?.id === postOrigin?.ownerId) {
+    if (session?.user.id === postOrigin?.ownerId) {
       const db = (await connectDB).db("forum");
       const deletePost = await db
         .collection("post")
@@ -117,8 +116,14 @@ const userAuthenticator = async (
       },
     });
 
-    const isAuthenticated = (await res).status;
+    const isAuthenticated = await res;
+    return isAuthenticated;
+  } else if (provider === "google") {
+    const res = fetch(
+      `https://oauth2.googleapis.com/tokeninfo?$id_token=${accessToken}`
+    );
 
+    const isAuthenticated = await res;
     return isAuthenticated;
   }
 };

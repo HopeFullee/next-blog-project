@@ -8,17 +8,20 @@ const nameRe = /^([a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]){2,12}$/;
 
 const profile = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "PUT") {
-    const session = await getServerSession(req, res, authOptions);
-    const { name } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json("접근 권한이 없습니다.");
+    }
 
-    if (!nameRe.exec(name))
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!nameRe.exec(req.body.name))
       return res.status(400).json("닉네임 형식이 틀렸습니다.");
 
     const db = (await connectDB).db("forum");
 
     const duplicateName = await db
       .collection("user_cred")
-      .findOne({ name: name });
+      .findOne({ name: req.body.name });
 
     if (duplicateName) {
       return res
@@ -30,7 +33,7 @@ const profile = async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("user_cred")
       .updateOne(
         { _id: new ObjectId(session?.user.id) },
-        { $set: { name: name } }
+        { $set: { name: req.body.name } }
       );
 
     return res.status(200).json("프로필 수정 완료.");

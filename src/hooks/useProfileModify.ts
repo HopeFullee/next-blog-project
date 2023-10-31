@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 export const useProfileModify = () => {
   const [isFetching, setIsFetching] = useState(false);
-  const { update: sessionUpdate } = useSession();
+  const { data: session, update: sessionUpdate } = useSession();
 
   const [duplicateError, setDuplicateError] = useState<Record<string, string>>(
     {}
@@ -15,9 +15,17 @@ export const useProfileModify = () => {
     setIsFetching(true);
 
     try {
-      const res = await axios.put("/api/auth/profile", {
-        name: profileData.name,
-      });
+      const res = await axios.put(
+        "/api/auth/profile",
+        {
+          name: profileData.name,
+        },
+        {
+          headers: {
+            Authorization: session?.accessToken,
+          },
+        }
+      );
 
       if (res.status === 200) {
         await sessionUpdate({ name: profileData.name });
