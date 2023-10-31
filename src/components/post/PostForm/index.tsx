@@ -102,6 +102,7 @@ const PostForm = () => {
             <CustomTextArea
               id="forum-content"
               name="content"
+              height="h-200"
               placeholder="내용을 입력해주세요."
               onChange={(e) => handleChange(e)}
               value={postData.content}

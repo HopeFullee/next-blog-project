@@ -1,8 +1,9 @@
-import DetailContent from "@/components/detail/DetailContent";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import axios from "@/lib/axios";
 import { PostType } from "@/types/post";
+import axios from "@/lib/axios";
+import DetailContent from "@/components/detail/DetailContent";
+import DetailComments from "@/components/detail/DetailComments";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +25,9 @@ const DetailPage = async (props: {
   const isPostOwner = session?.user?.id === postDetail.ownerId;
 
   return (
-    <section className="flex-center">
+    <section className="flex-col-center gap-80">
       <DetailContent {...postDetail} isPostOwner={isPostOwner} />
+      <DetailComments />
     </section>
   );
 };

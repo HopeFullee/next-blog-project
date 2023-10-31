@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import useDeletePost from "@/hooks/useDeletePost";
 import CustomModal from "@/components/shared/CustomModal";
 import axios from "axios";
 
@@ -9,25 +10,12 @@ interface Props {
 }
 
 const DeleteButton = ({ id }: Props) => {
-  const [isFetching, setIsFetching] = useState(false);
   const [modalState, setModalState] = useState(false);
 
-  const handleDeleteClick = async (id: string | undefined) => {
-    setIsFetching(true);
+  const { isFetching, deletePost } = useDeletePost();
 
-    try {
-      const res = await axios.delete("/api/forum", {
-        params: {
-          id: id,
-        },
-      });
-
-      if (res.status === 200) window.location.replace("/forum");
-      else throw res;
-    } catch (err) {
-      setIsFetching(false);
-      console.log(err);
-    }
+  const handleDeleteClick = async (id: string) => {
+    deletePost(id);
   };
 
   return (

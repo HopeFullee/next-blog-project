@@ -2,11 +2,12 @@
 
 interface Props extends React.ComponentProps<"textarea"> {
   regexWarning: string;
+  height: string;
 }
 
-const CustomTextArea = ({ regexWarning, ...rest }: Props) => {
+const CustomTextArea = ({ regexWarning, height, ...rest }: Props) => {
   return (
-    <div className="relative w-full min-h-150">
+    <div className={`relative w-full ${height}`}>
       <textarea
         {...rest}
         className="w-full text-[#15202B] p-5 outline-none resize-none h-full"

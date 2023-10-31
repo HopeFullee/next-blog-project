@@ -20,35 +20,39 @@ const DetailContent = ({
   // 날짜 수정 로직은 없음으로 최초 1회만 ISO 날짜 포맷 변환후 캐싱된 날짜 데이터 재활용.
   const postDate = useMemo(() => {
     const date = new Date(createdAt);
-    // const browserLocale =
-    //   typeof window !== "undefined" ? window.navigator.language : undefined;
-    // const dateFormatter = new Intl.DateTimeFormat(browserLocale, {
-    //   year: "numeric",
-    //   month: "2-digit",
-    //   day: "2-digit",
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    // });
+    const browserLocale =
+      typeof window !== "undefined" ? window.navigator.language : undefined;
+    const dateFormatter = new Intl.DateTimeFormat(browserLocale, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-    // const formattedDate = dateFormatter.format(date);
-    // .replace(/(?!-)[^0-9.:]/g, "")
-    // .replace(/\./g, ". ");
+    const formattedDate = dateFormatter
+      .format(date)
+      .replace(/(?!-)[^0-9.:]/g, "")
+      .replace(/\./g, ". ");
 
-    const addZero = (num: number) => {
-      if (num < 9) {
-        return "0" + num;
-      }
+    // const addZero = (num: number) => {
+    //   if (num < 9) {
+    //     return "0" + num;
+    //   }
 
-      return num;
-    };
+    //   return num;
+    // };
 
-    const year = date.getFullYear();
-    const month = addZero(date.getMonth() + 1);
-    const day = addZero(date.getDay());
-    const hour = addZero(date.getHours());
-    const minute = addZero(date.getMinutes());
+    // const year = date.getFullYear();
+    // const month = addZero(date.getMonth() + 1);
+    // const day = addZero(date.getDay());
+    // const hour = addZero(date.getHours());
+    // const minute = addZero(date.getMinutes());
 
-    const formattedDate = `${year}. ${month}. ${day}. ${hour}:${minute}`;
+    // const formattedDate = `${year}. ${month}. ${day}. ${hour}:${minute}`;
+
+    // console.log(date.getDay());
+    // console.log(createdAt);
 
     return formattedDate;
   }, []);
@@ -68,15 +72,17 @@ const DetailContent = ({
             <DeleteButton id={_id} />
           </li>
         )}
-        <li className="px-5 py-10 mt-20 border-b-2 border-cyan-500/40">
+        <li className="p-5 mt-20 border-b-2 border-cyan-500/40">
           <h4 className="font-semibold break-words text-20">{title}</h4>
         </li>
         <li className="px-5 py-10 border-b-2 border-cyan-500/40">
-          <div className="flex justify-between font-light text-14">
+          <div className="flex justify-between text-15">
             <p>{author}</p>
             <p>{postDate}</p>
           </div>
-          <p className="w-full mt-20 break-words">{content}</p>
+          <p className="w-full mt-20 font-light tracking-wide break-words">
+            {content}
+          </p>
         </li>
       </ul>
     </>
