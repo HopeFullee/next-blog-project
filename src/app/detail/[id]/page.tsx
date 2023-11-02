@@ -27,7 +27,7 @@ const DetailPage = async (props: {
   return (
     <section className="flex-col-center gap-80">
       <DetailContent {...postDetail} isPostOwner={isPostOwner} />
-      <DetailComments />
+      <DetailComments postId={postDetail._id} />
     </section>
   );
 };
