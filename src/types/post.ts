@@ -5,4 +5,9 @@ export interface PostType {
   title: string;
   content: string;
   createdAt: string;
+  comments: {
+    commenter: string;
+    comment: string;
+    createdAt: string;
+  }[];
 }

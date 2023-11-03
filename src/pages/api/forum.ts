@@ -44,6 +44,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
         ownerId: session?.user.id,
         title,
         content,
+        comments: [],
       });
       return res.status(200).json("게시글 등록");
     }

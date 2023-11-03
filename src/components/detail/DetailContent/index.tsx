@@ -18,7 +18,7 @@ const DetailContent = ({
   isPostOwner,
 }: Props) => {
   // 날짜 수정 로직은 없음으로 최초 1회만 ISO 날짜 포맷 변환후 캐싱된 날짜 데이터 재활용.
-  const postDate = useMemo(() => {
+  useMemo(() => {
     const date = new Date(createdAt);
     const browserLocale =
       typeof window !== "undefined" ? window.navigator.language : undefined;
@@ -35,26 +35,9 @@ const DetailContent = ({
       .replace(/(?!-)[^0-9.:]/g, "")
       .replace(/\./g, ". ");
 
-    // const addZero = (num: number) => {
-    //   if (num < 9) {
-    //     return "0" + num;
-    //   }
+    // return formattedDate;
 
-    //   return num;
-    // };
-
-    // const year = date.getFullYear();
-    // const month = addZero(date.getMonth() + 1);
-    // const day = addZero(date.getDay());
-    // const hour = addZero(date.getHours());
-    // const minute = addZero(date.getMinutes());
-
-    // const formattedDate = `${year}. ${month}. ${day}. ${hour}:${minute}`;
-
-    // console.log(date.getDay());
-    // console.log(createdAt);
-
-    return formattedDate;
+    createdAt = formattedDate;
   }, []);
 
   return (
@@ -78,7 +61,7 @@ const DetailContent = ({
         <li className="px-5 py-10 border-b-2 border-cyan-500/40">
           <div className="flex justify-between text-15">
             <p>{author}</p>
-            <p>{postDate}</p>
+            <p>{createdAt}</p>
           </div>
           <p className="w-full mt-20 font-light tracking-wide break-words">
             {content}

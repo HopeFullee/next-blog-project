@@ -17,7 +17,6 @@ const CustomModal = ({
   modalState,
   closeModal,
   eventHandler,
-  isFetching,
   children,
 }: Props) => {
   return (
@@ -26,7 +25,7 @@ const CustomModal = ({
       <div
         className={clsx(
           modalState ? "modal-animation" : "",
-          "w-full !py-40 max-w-300 absolute gap-30 z-30 flex-col-center border-2 rounded-md border-cyan-500/40"
+          "w-full !py-40 max-w-300 absolute gap-30 z-30 flex-col-center border-2 rounded-sm border-cyan-500/40 bg-gray-900"
         )}
       >
         <p>{children}</p>

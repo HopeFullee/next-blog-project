@@ -10,19 +10,27 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { postId, commenter, comment } = req.body;
 
+    console.log("--------------------------------------------");
+    console.log(commenter);
+
+    const createdAt = new Date();
+
     const db = (await connectDB).db("forum");
     const result = await db.collection("post").updateOne(
       { _id: new ObjectId(postId) },
       {
-        comments: {
-          $push: {
-            comment: {
-              commenter: commenter,
-              comment: comment,
-            },
+        $push: {
+          comments: {
+            commenter,
+            comment,
+            createdAt,
           },
         },
       }
     );
+
+    return res.status(200).json("댓글 등록 완료.");
   }
 };
+
+export default comment;

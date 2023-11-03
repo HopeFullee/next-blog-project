@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { PostId } from "..";
 import useComment from "@/hooks/useComment";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
@@ -8,7 +7,11 @@ export interface CommentData {
   comment: string;
 }
 
-const CommentTextArea = ({ postId }: PostId) => {
+interface Props {
+  postId: string;
+}
+
+const CommentTextArea = ({ postId }: Props) => {
   const { isFetching, addComment } = useComment();
 
   const [commentData, setCommentData] = useState<CommentData>({
@@ -32,7 +35,7 @@ const CommentTextArea = ({ postId }: PostId) => {
   const formValidator = () => {
     const emptyFormKeyList: string[] = [];
 
-    Object.entries(regexWarning).forEach(([key, value]) => {
+    Object.entries(commentData).forEach(([key, value]) => {
       if (value.trim() === "") emptyFormKeyList.push(key);
     });
 
@@ -40,8 +43,6 @@ const CommentTextArea = ({ postId }: PostId) => {
   };
 
   const handleSubmit = () => {
-    console.log(postId);
-
     const emptyFormKeyList = formValidator();
 
     emptyFormKeyList.forEach((formKey) => {
