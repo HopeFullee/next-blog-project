@@ -1,7 +1,6 @@
-import { PostType } from "@/types/post";
+import { NextApiRequest, NextApiResponse } from "next";
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
 
 const postDetail = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -12,12 +11,27 @@ const postDetail = async (req: NextApiRequest, res: NextApiResponse) => {
       .collection("post")
       .findOne({ _id: new ObjectId(id) });
 
+    if (!postDetail) return res.status(404).json("포스트가 존제하지 않습니다.");
+
+    const { ownerId, comments } = postDetail;
+
     // find the post owner's name by unique ownerId
     const author = await db
       .collection("user_cred")
-      .findOne({ _id: new ObjectId(postDetail?.ownerId) });
+      .findOne({ _id: new ObjectId(ownerId) });
 
-    if (postDetail) postDetail.author = author?.name;
+    postDetail.author = author?.name;
+
+    // find the commenter's name by unique commenterId
+    const promise = comments.map(async ({ commenterId }: any, idx: number) => {
+      const result = await db
+        .collection("user_cred")
+        .findOne({ _id: new ObjectId(commenterId) });
+
+      comments[idx].commenter = result?.name;
+    });
+
+    await Promise.all(promise);
 
     return res.status(200).json(postDetail);
   }

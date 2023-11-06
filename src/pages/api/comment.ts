@@ -8,10 +8,7 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(403).json("접근 권한이 없습니다.");
     }
 
-    const { postId, commenter, comment } = req.body;
-
-    console.log("--------------------------------------------");
-    console.log(commenter);
+    const { postId, commenterId, comment } = req.body;
 
     const createdAt = new Date();
 
@@ -21,7 +18,7 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
       {
         $push: {
           comments: {
-            commenter,
+            commenterId,
             comment,
             createdAt,
           },

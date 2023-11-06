@@ -1,8 +1,10 @@
+import { Session } from "next-auth";
 import CommentList from "./CommentList";
 import CommentTextArea from "./CommentTextArea";
 
 interface Props {
   postId: string;
+  session: Session | null;
   comments: {
     commenter: string;
     comment: string;
@@ -10,7 +12,7 @@ interface Props {
   }[];
 }
 
-const DetailComments = ({ postId, comments }: Props) => {
+const DetailComments = ({ postId, comments, session }: Props) => {
   return (
     <article className="w-full max-w-500">
       <p className="p-5 font-semibold border-b-2 text-18 border-cyan-500/40">
@@ -21,7 +23,7 @@ const DetailComments = ({ postId, comments }: Props) => {
           return <CommentList {...rest} />;
         })}
       </ul>
-      <CommentTextArea postId={postId} />
+      <CommentTextArea postId={postId} session={session} />
     </article>
   );
 };

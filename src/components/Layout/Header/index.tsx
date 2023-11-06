@@ -5,7 +5,7 @@ import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
 interface Props {
-  session?: Session | null;
+  session: Session | null;
 }
 
 const Header = ({ session }: Props) => {

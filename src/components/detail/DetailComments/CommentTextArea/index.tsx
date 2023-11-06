@@ -2,6 +2,7 @@
 import { useState } from "react";
 import useComment from "@/hooks/useComment";
 import CustomTextArea from "@/components/shared/CustomTextArea";
+import { Session } from "next-auth";
 
 export interface CommentData {
   comment: string;
@@ -9,9 +10,10 @@ export interface CommentData {
 
 interface Props {
   postId: string;
+  session: Session | null;
 }
 
-const CommentTextArea = ({ postId }: Props) => {
+const CommentTextArea = ({ postId, session }: Props) => {
   const { isFetching, addComment } = useComment();
 
   const [commentData, setCommentData] = useState<CommentData>({
@@ -54,28 +56,29 @@ const CommentTextArea = ({ postId }: Props) => {
     addComment(commentData, postId);
   };
 
-  return (
-    <form
-      className="flex flex-col items-end gap-10 mt-15"
-      onSubmit={(e) => e.preventDefault()}
-    >
-      <CustomTextArea
-        name="comment"
-        height="h-80"
-        placeholder="댓글을 입력해주세요."
-        onChange={(e) => handleChange(e)}
-        value={commentData.comment}
-        regexWarning={regexWarning.comment}
-      />
-      <button
-        className="py-6 font-semibold rounded-sm px-15 bg-cyan-500/25 text-14 hover:under:text-cyan-400"
-        onClick={handleSubmit}
-        disabled={isFetching}
+  if (session)
+    return (
+      <form
+        className="flex flex-col items-end gap-10 mt-15"
+        onSubmit={(e) => e.preventDefault()}
       >
-        Submit
-      </button>
-    </form>
-  );
+        <CustomTextArea
+          name="comment"
+          height="h-80"
+          placeholder="댓글을 입력해주세요."
+          onChange={(e) => handleChange(e)}
+          value={commentData.comment}
+          regexWarning={regexWarning.comment}
+        />
+        <button
+          className="py-6 font-semibold rounded-sm px-15 bg-cyan-500/25 text-14 hover:text-cyan-400"
+          onClick={handleSubmit}
+          disabled={isFetching}
+        >
+          Submit
+        </button>
+      </form>
+    );
 };
 
 export default CommentTextArea;

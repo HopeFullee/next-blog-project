@@ -24,10 +24,17 @@ const DetailPage = async (props: {
 
   const isPostOwner = session?.user?.id === postDetail.ownerId;
 
+  console.log("------------------ D E T A I L  ---------------------");
+  console.log(postDetail.comments);
+
   return (
     <section className="flex-col-center gap-80">
       <DetailContent {...postDetail} isPostOwner={isPostOwner} />
-      <DetailComments postId={postDetail._id} comments={postDetail.comments} />
+      <DetailComments
+        postId={postDetail._id}
+        comments={postDetail.comments}
+        session={session}
+      />
     </section>
   );
 };

@@ -18,7 +18,7 @@ const useComment = () => {
         "/api/comment",
         {
           postId: postId,
-          commenter: session?.user.name,
+          commenterId: session?.user.id,
           comment: commentData.comment,
         },
         {

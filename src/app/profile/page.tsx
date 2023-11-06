@@ -11,7 +11,7 @@ const Profile = async () => {
   else
     return (
       <section className="px-20">
-        <ProfileForm />
+        <ProfileForm session={session} />
       </section>
     );
 };

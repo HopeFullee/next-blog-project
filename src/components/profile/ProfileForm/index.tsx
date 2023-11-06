@@ -1,10 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useProfileModify } from "@/hooks/useProfileModify";
+import { Session } from "next-auth";
 import CustomInput from "@/components/shared/CustomInput";
-import LoadingAnim from "@/components/shared/LoadingAnim";
 
 const nameRe = /^([a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]){2,12}$/;
 
@@ -12,9 +11,12 @@ export interface ProfileData {
   name: string | undefined;
 }
 
-const ProfileForm = () => {
+interface Props {
+  session: Session;
+}
+
+const ProfileForm = ({ session }: Props) => {
   const { profileModify, duplicateError, isFetching } = useProfileModify();
-  const { data: session, status } = useSession();
 
   const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
@@ -82,13 +84,6 @@ const ProfileForm = () => {
 
     profileModify(profileData);
   };
-
-  if (status === "loading")
-    return (
-      <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-        <LoadingAnim />
-      </div>
-    );
 
   if (session)
     return (
