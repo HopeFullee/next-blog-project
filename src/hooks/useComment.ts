@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { CommentData } from "@/components/detail/DetailComments/CommentTextArea";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
@@ -10,7 +9,7 @@ const useComment = () => {
 
   const { data: session } = useSession();
 
-  const addComment = async (commentData: CommentData, postId: string) => {
+  const addComment = async (commentData: string, postId: string) => {
     setIsFetching(true);
 
     try {
@@ -19,7 +18,7 @@ const useComment = () => {
         {
           postId: postId,
           commenterId: session?.user.id,
-          comment: commentData.comment,
+          comment: commentData,
         },
         {
           headers: {

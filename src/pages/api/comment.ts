@@ -10,6 +10,8 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { postId, commenterId, comment } = req.body;
 
+    if (comment.trim() === "") return res.status(400).json("*필수 항목입니다.");
+
     const createdAt = new Date();
 
     const db = (await connectDB).db("forum");

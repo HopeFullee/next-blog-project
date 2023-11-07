@@ -74,7 +74,7 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
         <form
           onSubmit={(e) => e.preventDefault()}
           method="POST"
-          className="w-full gap-40 mt-40 flex-col-center"
+          className="w-full mt-40 gap-30 flex-col-center"
         >
           <div className="flex justify-between w-full">
             <label
@@ -104,6 +104,7 @@ const ModifyForm = ({ id, title, content }: PostModify) => {
               id="forum-content"
               name="content"
               placeholder="본문 내용"
+              height="h-200"
               onChange={(e) => handleChange(e)}
               value={postData.content}
               regexWarning={regexWarning.content}

@@ -73,7 +73,7 @@ const PostForm = () => {
         <h4 className="font-semibold text-18">Forum Post</h4>
         <form
           onSubmit={(e) => e.preventDefault}
-          className="w-full mt-40 gap-35 flex-col-center"
+          className="w-full mt-40 gap-30 flex-col-center"
         >
           <div className="flex justify-between w-full">
             <label

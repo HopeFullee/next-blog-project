@@ -4,10 +4,6 @@ import useComment from "@/hooks/useComment";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 import { Session } from "next-auth";
 
-export interface CommentData {
-  comment: string;
-}
-
 interface Props {
   postId: string;
   session: Session | null;
@@ -16,42 +12,23 @@ interface Props {
 const CommentTextArea = ({ postId, session }: Props) => {
   const { isFetching, addComment } = useComment();
 
-  const [commentData, setCommentData] = useState<CommentData>({
-    comment: "",
-  });
+  const [commentData, setCommentData] = useState("");
 
-  const [regexWarning, setRegexWarning] = useState({
-    comment: "",
-  });
-
-  const regexErrorSet = (formKey: string, errorMsg: string) => {
-    setRegexWarning((prev) => ({ ...prev, [formKey]: errorMsg }));
-  };
+  const [regexWarning, setRegexWarning] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
+    setCommentData(value);
 
-    setCommentData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const formValidator = () => {
-    const emptyFormKeyList: string[] = [];
-
-    Object.entries(commentData).forEach(([key, value]) => {
-      if (value.trim() === "") emptyFormKeyList.push(key);
-    });
-
-    return emptyFormKeyList;
+    if (value.trim() === "") setRegexWarning("*필수 항목입니다.");
+    else setRegexWarning("");
   };
 
   const handleSubmit = () => {
-    const emptyFormKeyList = formValidator();
-
-    emptyFormKeyList.forEach((formKey) => {
-      regexErrorSet(formKey, "*필수 항목입니다.");
-    });
-
-    if (emptyFormKeyList.length !== 0) return;
+    if (commentData.trim() === "") {
+      setRegexWarning("*필수 항목입니다.");
+      return;
+    }
 
     addComment(commentData, postId);
   };
@@ -67,8 +44,8 @@ const CommentTextArea = ({ postId, session }: Props) => {
           height="h-80"
           placeholder="댓글을 입력해주세요."
           onChange={(e) => handleChange(e)}
-          value={commentData.comment}
-          regexWarning={regexWarning.comment}
+          value={commentData}
+          regexWarning={regexWarning}
         />
         <button
           className="py-6 font-semibold rounded-sm px-15 bg-cyan-500/25 text-14 hover:text-cyan-400"
