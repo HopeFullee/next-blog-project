@@ -1,24 +1,25 @@
-"use client";
-
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
-const useComment = () => {
+const useCommentModify = () => {
   const [isFetching, setIsFetching] = useState(false);
 
   const { data: session } = useSession();
 
-  const addComment = async (commentData: string, postId: string) => {
+  const commentModify = async (
+    modifiedCommentData: string,
+    commentId: string
+  ) => {
     setIsFetching(true);
 
     try {
-      const res = await axios.post(
+      const res = await axios.put(
         "/api/comment",
         {
           postId: postId,
-          commenterId: session?.user.id,
-          comment: commentData,
+          commentId: session?.user.id,
+          comment: modifiedCommentData,
         },
         {
           headers: {
@@ -35,7 +36,7 @@ const useComment = () => {
     }
   };
 
-  return { isFetching, addComment };
+  return { isFetching, commentModify };
 };
 
-export default useComment;
+export default useCommentModify;

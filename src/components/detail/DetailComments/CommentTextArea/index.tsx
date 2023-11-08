@@ -1,8 +1,9 @@
 "use client";
+
 import { useState } from "react";
-import useComment from "@/hooks/useComment";
-import CustomTextArea from "@/components/shared/CustomTextArea";
 import { Session } from "next-auth";
+import useCommentPost from "@/hooks/comment/useCommentPost";
+import CustomTextArea from "@/components/shared/CustomTextArea";
 
 interface Props {
   postId: string;
@@ -10,7 +11,7 @@ interface Props {
 }
 
 const CommentTextArea = ({ postId, session }: Props) => {
-  const { isFetching, addComment } = useComment();
+  const { isFetching, addComment } = useCommentPost();
 
   const [commentData, setCommentData] = useState("");
 

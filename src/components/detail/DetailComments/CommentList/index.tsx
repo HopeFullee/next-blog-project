@@ -2,16 +2,26 @@
 
 import { Session } from "next-auth";
 import { useMemo, useState } from "react";
+import useCommentModify from "@/hooks/comment/useCommentModify";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
 interface Props {
+  _id: string;
+  session: Session | null;
   commenter: string;
   comment: string;
   createdAt: string;
-  session: Session | null;
 }
 
-const CommentList = ({ commenter, comment, createdAt, session }: Props) => {
+const CommentList = ({
+  _id,
+  commenter,
+  comment,
+  createdAt,
+  session,
+}: Props) => {
+  const { isFetching, commentModify } = useCommentModify();
+
   const [editMode, setEditMode] = useState(false);
   const [modifiedCommentData, setModifiedCommentData] = useState(comment);
   const [regexWarning, setRegexWarning] = useState("");
@@ -57,6 +67,8 @@ const CommentList = ({ commenter, comment, createdAt, session }: Props) => {
 
   const handleModifySubmit = () => {
     if (regexWarning) return;
+
+    commentModify(modifiedCommentData, _id);
   };
 
   return (
@@ -86,7 +98,9 @@ const CommentList = ({ commenter, comment, createdAt, session }: Props) => {
           />
           <div className="flex justify-end gap-10 font-semibold under:py-5 under:px-12 text-13 under:bg-cyan-500/25 hover:under:text-cyan-400 under:rounded-sm">
             <button>Delete</button>
-            <button onClick={handleModifySubmit}>Submit</button>
+            <button onClick={handleModifySubmit} disabled={isFetching}>
+              Submit
+            </button>
           </div>
         </div>
       ) : (

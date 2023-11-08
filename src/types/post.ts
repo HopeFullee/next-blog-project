@@ -6,6 +6,7 @@ export interface PostType {
   content: string;
   createdAt: string;
   comments: {
+    _id: string;
     commenterId: string;
     commenter: string;
     comment: string;

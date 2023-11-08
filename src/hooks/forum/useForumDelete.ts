@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
-const useDeletePost = () => {
+const useForumDelete = () => {
   const [isFetching, setIsFetching] = useState(false);
 
   const { data: session } = useSession();
@@ -34,4 +34,4 @@ const useDeletePost = () => {
   };
 };
 
-export default useDeletePost;
+export default useForumDelete;

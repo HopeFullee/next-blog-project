@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useForumModify } from "@/hooks/useForumModify";
+import { useForumModify } from "@/hooks/forum/useForumModify";
 import CustomInput from "@/components/shared/CustomInput";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
