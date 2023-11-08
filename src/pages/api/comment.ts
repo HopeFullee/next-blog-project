@@ -37,10 +37,7 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(403).json("접근 권한이 없습니다.");
     }
 
-    console.log("----------------------------");
-    console.log(req.body);
-
-    const { postId, commenterId, comment } = req.body;
+    const { postId, commentId, comment } = req.body;
 
     const db = (await connectDB).db("forum");
     const result = await db.collection("post").updateOne(
@@ -51,7 +48,7 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
       {
-        arrayFilters: [{ "element.commenterId": commenterId }],
+        arrayFilters: [{ "element._id": new ObjectId(commentId) }],
       }
     );
 

@@ -9,7 +9,8 @@ const useCommentModify = () => {
 
   const commentModify = async (
     modifiedCommentData: string,
-    commentId: string
+    commentId: string,
+    postId: string
   ) => {
     setIsFetching(true);
 
@@ -18,7 +19,7 @@ const useCommentModify = () => {
         "/api/comment",
         {
           postId: postId,
-          commentId: session?.user.id,
+          commentId: commentId,
           comment: modifiedCommentData,
         },
         {

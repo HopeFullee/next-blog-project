@@ -6,15 +6,17 @@ import useCommentModify from "@/hooks/comment/useCommentModify";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 
 interface Props {
-  _id: string;
   session: Session | null;
+  postId: string;
+  _id: string;
   commenter: string;
   comment: string;
   createdAt: string;
 }
 
 const CommentList = ({
-  _id,
+  _id: commentId,
+  postId,
   commenter,
   comment,
   createdAt,
@@ -68,7 +70,7 @@ const CommentList = ({
   const handleModifySubmit = () => {
     if (regexWarning) return;
 
-    commentModify(modifiedCommentData, _id);
+    commentModify(modifiedCommentData, commentId, postId);
   };
 
   return (

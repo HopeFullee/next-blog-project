@@ -20,7 +20,7 @@ const DetailComments = ({ postId, comments, session }: Props) => {
       </p>
       <ul>
         {comments.map(({ ...rest }) => {
-          return <CommentList {...rest} session={session} />;
+          return <CommentList {...rest} postId={postId} session={session} />;
         })}
       </ul>
       <CommentTextArea postId={postId} session={session} />
