@@ -6,6 +6,7 @@ interface Props {
   postId: string;
   session: Session | null;
   comments: {
+    _id: string;
     commenter: string;
     comment: string;
     createdAt: string;
