@@ -2,6 +2,7 @@
 
 import CustomTextArea from "@/components/shared/CustomTextArea";
 import useCommentModify from "@/hooks/comment/useCommentModify";
+import useCommentDelete from "@/hooks/comment/useCommentDelete";
 import { useState } from "react";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 const CommentModify = ({ postId, commentId, comment }: Props) => {
   const { isFetching, commentModify } = useCommentModify();
+  const { isFetching: isDeleteing, commentDelete } = useCommentDelete();
 
   const [modifiedCommentData, setModifiedCommentData] = useState(comment);
   const [regexWarning, setRegexWarning] = useState("");
@@ -24,10 +26,14 @@ const CommentModify = ({ postId, commentId, comment }: Props) => {
     else setRegexWarning("");
   };
 
-  const handleModifySubmit = () => {
+  const handleModifyClick = () => {
     if (regexWarning) return;
 
     commentModify(modifiedCommentData, commentId, postId);
+  };
+
+  const handleDeleteClick = () => {
+    commentDelete(commentId, postId);
   };
 
   return (
@@ -41,8 +47,10 @@ const CommentModify = ({ postId, commentId, comment }: Props) => {
           regexWarning={regexWarning}
         />
         <div className="flex justify-end gap-10 font-semibold under:py-5 under:px-12 text-13 under:bg-cyan-500/25 hover:under:text-cyan-400 under:rounded-sm">
-          <button>Delete</button>
-          <button onClick={handleModifySubmit} disabled={isFetching}>
+          <button onClick={handleDeleteClick} disabled={isDeleteing}>
+            Delete
+          </button>
+          <button onClick={handleModifyClick} disabled={isFetching}>
             Submit
           </button>
         </div>

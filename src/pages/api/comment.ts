@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectDB } from "@/util/database";
 import { ObjectId } from "mongodb";
+import { connect } from "http2";
 
 const comment = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
@@ -53,6 +54,29 @@ const comment = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     return res.status(200).json("댓글 수정 완료.");
+  }
+
+  if (req.method === "DELETE") {
+    if (!req.headers.authorization) {
+      return res.status(403).json("접근 권한이 없습니다.");
+    }
+
+    const postId = req.query.postId?.toString();
+    const commentId = req.query.commentId?.toString();
+
+    const db = (await connectDB).db("forum");
+    const result = await db.collection("post").updateOne(
+      { _id: new ObjectId(postId) },
+      {
+        $pull: {
+          comments: {
+            _id: new ObjectId(commentId),
+          },
+        },
+      }
+    );
+
+    return res.status(200).json("댓글 삭제 완료.");
   }
 };
 

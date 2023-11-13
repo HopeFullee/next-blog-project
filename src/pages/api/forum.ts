@@ -102,31 +102,31 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(500).json("server error");
 };
 
-const userAuthenticator = async (
-  accessToken: string | undefined,
-  provider: string
-) => {
-  // 일반 회원가입 유저는 accessToken 발급 API 가 없으므로 true 반환
-  if (provider === "credentials") {
-    return true;
-  } else if (provider === "github") {
-    const res = fetch("https://api.github.com/octocat", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    });
+// const userAuthenticator = async (
+//   accessToken: string | undefined,
+//   provider: string
+// ) => {
+//   // 일반 회원가입 유저는 accessToken 발급 API 가 없으므로 true 반환
+//   if (provider === "credentials") {
+//     return true;
+//   } else if (provider === "github") {
+//     const res = fetch("https://api.github.com/octocat", {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         "X-GitHub-Api-Version": "2022-11-28",
+//       },
+//     });
 
-    const isAuthenticated = await res;
-    return isAuthenticated;
-  } else if (provider === "google") {
-    const res = fetch(
-      `https://oauth2.googleapis.com/tokeninfo?$id_token=${accessToken}`
-    );
+//     const isAuthenticated = await res;
+//     return isAuthenticated;
+//   } else if (provider === "google") {
+//     const res = fetch(
+//       `https://oauth2.googleapis.com/tokeninfo?$id_token=${accessToken}`
+//     );
 
-    const isAuthenticated = await res;
-    return isAuthenticated;
-  }
-};
+//     const isAuthenticated = await res;
+//     return isAuthenticated;
+//   }
+// };
 
 export default forum;
