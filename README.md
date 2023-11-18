@@ -89,3 +89,20 @@ yarn dev
     - credentials 로그인은 토큰관련 backend 기술 부재로 기능 테스트용도를 위해 <span style="color: coral">DUMMY TOKEN</span> 발급
   - session 관리
     - 로그인한 회원정보 <span style="color:#ADD8E6">{ id, token, nickname ...etc }</span>를 next-auth 에서 제공하는 session (cookie)에 담아 생성
+
+- **RESTFUL API**
+
+  - 인생 첫 서버 개발이라 미숙한점 양해 바랍니다.
+  - 최대한 REST 형식에 맞게 { GET, POST, PUT, DELETE } 사용
+  - 프론트 측 API 통신 시 header 에서 Acess Token 확인하여 API 실행
+    - backend 기술 부재로 Access Token이 왔는지 까지만 확인합니다 ㅠㅠ
+
+- **회원정보 수정**
+
+  - 닉네임 변경 요청 시 정규식, 중복 검사를 진행합니다.
+    - 중복 에러는 프론트로 전달하여 프론트 측에서 UI 경고 표시
+
+- **게시판 기능**
+
+  - 게시글 생성 POST
+    - { 작성자 ID, 제목, 내용, 작성일, 댓글:{빈 배열} } 를 DB에 저장합니다.
