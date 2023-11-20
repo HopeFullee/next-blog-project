@@ -10,15 +10,17 @@ type InputElements = HTMLInputElement | HTMLTextAreaElement;
 
 export interface PostModify {
   id: string;
+  ownerId: string;
   title: string;
   content: string;
 }
 
-const ModifyForm = ({ id, title, content }: PostModify) => {
+const ModifyForm = ({ id, ownerId, title, content }: PostModify) => {
   const { modify, isFetching } = useForumModify();
 
   const [postData, setPostData] = useState({
     id: id,
+    ownerId: ownerId,
     title: title,
     content: content,
   });

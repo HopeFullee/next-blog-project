@@ -16,6 +16,7 @@ export const useForumModify = () => {
         "/api/forum",
         {
           id: postData.id,
+          ownerId: postData.ownerId,
           title: postData.title,
           content: postData.content,
         },

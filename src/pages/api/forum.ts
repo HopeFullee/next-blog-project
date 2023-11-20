@@ -26,7 +26,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     if (!req.headers.authorization) {
-      return res.status(403).json("접근 권한이 없습니다.");
+      return res.status(403).json("로그인 해주세요.");
     }
 
     const session = await getServerSession(req, res, authOptions);
@@ -52,13 +52,19 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "PUT") {
     if (!req.headers.authorization) {
-      return res.status(403).json("접근 권한이 없습니다.");
+      return res.status(403).json("로그인 해주세요.");
     }
 
-    const { id, title, content } = req.body;
+    const session = await getServerSession(req, res, authOptions);
+
+    const { id, ownerId, title, content } = req.body;
 
     if (title.trim() === "" || content.trim() === "") {
       return res.status(400).json("비어있는 항목이 존제합니다.");
+    }
+
+    if (ownerId !== session?.user.id) {
+      return res.status(403).json("게시글의 작성자가 아닙니다.");
     }
 
     const db = (await connectDB).db("forum");
@@ -77,7 +83,7 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "DELETE") {
     if (!req.headers.authorization) {
-      return res.status(403).json("접근 권한이 없습니다.");
+      return res.status(403).json("로그인 해주세요.");
     }
 
     const session = await getServerSession(req, res, authOptions);
@@ -85,18 +91,21 @@ const forum = async (req: NextApiRequest, res: NextApiResponse) => {
     const id = req.query.id?.toString();
 
     const db = (await connectDB).db("forum");
+
+    // 쿼리로 글작성자의 ownerId 를 받오면 위험하므로 별도로 DB에서 받아옴
     const postOrigin = await db
       .collection("post")
       .findOne({ _id: new ObjectId(id) });
 
-    if (session?.user.id === postOrigin?.ownerId) {
-      const db = (await connectDB).db("forum");
-      const deletePost = await db
-        .collection("post")
-        .deleteOne({ _id: new ObjectId(id) });
-
-      return res.status(200).json("삭제됨");
+    if (session?.user.id !== postOrigin?.ownerId) {
+      return res.status(403).json("게시글의 작성자가 아닙니다.");
     }
+
+    const deletePost = await db
+      .collection("post")
+      .deleteOne({ _id: new ObjectId(id) });
+
+    return res.status(200).json("삭제됨");
   }
 
   return res.status(500).json("server error");
