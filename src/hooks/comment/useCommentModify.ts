@@ -9,6 +9,7 @@ const useCommentModify = () => {
 
   const commentModify = async (
     modifiedCommentData: string,
+    commenterId: string,
     commentId: string,
     postId: string
   ) => {
@@ -20,6 +21,7 @@ const useCommentModify = () => {
         {
           postId: postId,
           commentId: commentId,
+          commenterId: commenterId,
           comment: modifiedCommentData,
         },
         {

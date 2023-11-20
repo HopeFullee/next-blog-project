@@ -8,6 +8,7 @@ interface Props {
   session: Session | null;
   postId: string;
   _id: string;
+  commenterId: string;
   commenter: string;
   comment: string;
   createdAt: string;
@@ -16,6 +17,7 @@ interface Props {
 const CommentList = ({
   _id: commentId,
   postId,
+  commenterId,
   commenter,
   comment,
   createdAt,
@@ -68,6 +70,7 @@ const CommentList = ({
       {editMode ? (
         <CommentModify
           postId={postId}
+          commenterId={commenterId}
           commentId={commentId}
           comment={comment}
         />

@@ -8,10 +8,11 @@ import { useState } from "react";
 interface Props {
   postId: string;
   commentId: string;
+  commenterId: string;
   comment: string;
 }
 
-const CommentModify = ({ postId, commentId, comment }: Props) => {
+const CommentModify = ({ postId, commentId, commenterId, comment }: Props) => {
   const { isFetching, commentModify } = useCommentModify();
   const { isFetching: isDeleteing, commentDelete } = useCommentDelete();
 
@@ -29,7 +30,7 @@ const CommentModify = ({ postId, commentId, comment }: Props) => {
   const handleModifyClick = () => {
     if (regexWarning) return;
 
-    commentModify(modifiedCommentData, commentId, postId);
+    commentModify(modifiedCommentData, commenterId, commentId, postId);
   };
 
   const handleDeleteClick = () => {
