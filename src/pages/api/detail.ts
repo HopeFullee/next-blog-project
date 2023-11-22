@@ -24,11 +24,11 @@ const postDetail = async (req: NextApiRequest, res: NextApiResponse) => {
 
     // find the commenter's name by unique commenterId
     const promise = comments.map(async ({ commenterId }: any, idx: number) => {
-      const result = await db
+      const commenter = await db
         .collection("user_cred")
         .findOne({ _id: new ObjectId(commenterId) });
 
-      comments[idx].commenter = result?.name;
+      comments[idx].commenter = commenter?.name;
     });
 
     await Promise.all(promise);

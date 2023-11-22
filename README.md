@@ -8,6 +8,25 @@ or
 yarn dev
 ```
 
+## Framework, Database, Librarys
+
+- **Framework**
+
+  - Next.js 13.4.13
+
+- **Database**
+
+  - MongoDB 5.7.0
+
+- **Library**
+  - Typescript 5.1.6
+  - Axios 1.5.0
+  - Next-Auth 4.23.1
+  - Node.js 20.5.0
+  - bcrypt 5.1.1
+  - Tailwindcss 3.3.3
+  - clsx 2.0.0
+
 ## 전체 기능 Summary
 
 - **인가/인증**
@@ -74,6 +93,7 @@ yarn dev
   - next-auth 라이브러리 환경에서 작성 <span style="color:#ADD8E6">src/pages/api/auth</span>
   - credentials 회원가입 및 로그인
     - credentials 회원가입 페이지에 기입한 Form 정보로 DB에 저장하여 회원가입
+      - 비밀번호는 bcrypt 암호화 하여 DB에 저장
     - 커스텀 로그인 페이지에 기입한 로그인 Form 정보를 next-auth 에서 지원하는 signIn 함수에 전달 하여 로그인
       <span style="color:#ADD8E6">Credentials Provider</span>
   - oAuth 회원가입 및 로그인
@@ -110,15 +130,34 @@ yarn dev
     - 불러온 게시글에 저장된 { 작성자 ID } 와 동일한 회원의 정보를 DB에서 받아온후
       { author: DB회원정보.닉네임 } 의 프로퍼티를 추가하여 프론트로 보내줍니다
       - 닉네임 변경 시 이전에 작성했던 게시글의 작성자 닉네임 또한 변경된 닉네임으로 표시하기 위함
+  - 게시글 상세 정보 GET
+    - URL query 파라미터로 전달 받은 게시글의 ID로 DB에 서 상세적보를 추적하여 프론트로 전달합니다
+      - 추적한 게시글의 { 작성자 ID }, { 댓글 작성자 ID } 정보를 활용해 별도로 DB에서 회원의 정보를 가져온후
+        상세글 정보에 포함하여 프론트로 전달
+      - 닉네임 변경 시 이전에 작성했던 게시글, 댓글의 작성자 닉네임 또한 변경된 닉네임으로 표시하기 위함
   - 게시글 생성 POST
     - { 작성자 ID, 제목, 내용, 작성일, 댓글:{빈 배열} } 를 DB에 저장합니다
     - MongoDB 에 저장된 게시글엔 Object Id 의 unique key가 자동으로 생성됩니다
   - 게시글 수정 PUT
     - 수정을 요청한 게시글의 { 작성자 ID } 와 요청자의 { session.user.id } 와 동일한지 비교합니다
-    - { 제목, 내용 } 등을 Object Id 로 추적하여 update 합니다
+    - 수정할 게시글을 Object Id 로 추적하여 { 제목, 내용 }등을 update 합니다
   - 게시글 삭제 DELETE
     - 삭제를 요청한 게시글의 { 작성자 ID } 와 요청자의 { session.user.id } 와 동일한지 비교합니다
       - DELETE 메소드의 특성상 req.body 를 권장하지 않음으로 URL에 노출되어도 지장이 없는 { 게시글 ID }만 query로 받아오고
-      - 게시글의 { 작성자 ID } 정보는 별도로 DB에서 { 게시글 ID }로 받아온 후 상단 설명대로 수행합니다
+      - 게시글의 { 작성자 ID } 정보는 별도로 DB에서 { 게시글 ID }로 추적하여 받아온 후 상단 설명대로 수행합니다
   - 댓글 작성 POST
-    - { 작성자 ID, 내용, 작성일 } 을 귀속되어있는 본문 게시글의 { 댓글: { 빌배열 } } 에 추가합니다.
+    - { 작성자 ID, 내용, 작성일 } 을 귀속 되어있는 본문 게시글의 { 댓글: { 빌배열 } } 에 추가합니다
+      - 추후 댓글 수정, 삭제를 위해 고의로 새로운 Object Id (unique key)를 추가해줍니다
+  - 댓글 수정 PUT
+    - 수정을 요청한 댓글의 { 작성자 ID } 와 요청자의 { session.user.id } 와 동일한지 비교합니다
+    - 수정할 댓글을 Object Id 로 추적하여 { 내용 }을 update 합니다
+  - 댓글 삭제 DELETE
+    - 삭제를 요청한 댓글의 { 작성자 ID } 와 요청자의 { session.user.id } 와 동일한지 비교합니다
+      - DELETE 메소드의 특성상 req.body 를 권장하지 않음으로 URL에 노출되어도 지장이 없는 { 댓글 ID, 게시글 ID }만 query로 받아오고
+      - 댓글의 { 작성자 ID } 정보는 별도로 DB에서 { 게시글 ID 와 댓글 작성자 ID }로 추적하여 받아온 후 상단 설명대로 수행합니다
+
+## To Do List
+
+- 게시글 조회수 기능
+- 게시판 pagination 기능 (backend 가 많이 어려워 보임..)
+- 게시간 게시글 검색 기능
